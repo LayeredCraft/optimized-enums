@@ -118,7 +118,7 @@ internal static class EnumSyntaxProvider
         }
 
         // OE0005: duplicate values (best-effort, only for compile-time constants)
-        DetectDuplicateValues(classSymbol, classDecl, context.SemanticModel, validMembers, diagnostics, className, cancellationToken);
+        DetectDuplicateValues(classSymbol, context.SemanticModel, validMembers, diagnostics, className, cancellationToken);
 
         // OE0004: no valid members
         if (validMembers.Count == 0)
@@ -161,59 +161,66 @@ internal static class EnumSyntaxProvider
 
     private static void DetectDuplicateValues(
         INamedTypeSymbol classSymbol,
-        ClassDeclarationSyntax classDecl,
         SemanticModel semanticModel,
         List<string> memberNames,
         List<DiagnosticInfo> diagnostics,
         string className,
         CancellationToken cancellationToken)
     {
-        // Build a mapping of field name -> constant value (best effort, skips non-literals)
-        var valueToField = new Dictionary<string, string>(StringComparer.Ordinal);
+        // Build a mapping of constant value -> first field name (best effort, skips non-literals).
+        // Use object keys so that value-type equality (e.g. decimal 1.0m == 1.00m) is respected
+        // rather than their differing string representations.
+        var valueToField = new Dictionary<object, string>();
         var memberSet = new HashSet<string>(memberNames, StringComparer.Ordinal);
 
-        foreach (var member in classDecl.Members)
+        // Iterate ALL partial declarations so that members defined in other files are covered.
+        foreach (var syntaxRef in classSymbol.DeclaringSyntaxReferences)
         {
-            if (member is not FieldDeclarationSyntax fieldDecl)
+            if (syntaxRef.GetSyntax(cancellationToken) is not ClassDeclarationSyntax partialDecl)
                 continue;
 
-            foreach (var variable in fieldDecl.Declaration.Variables)
+            foreach (var member in partialDecl.Members)
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                var fieldName = variable.Identifier.Text;
-                if (!memberSet.Contains(fieldName))
+                if (member is not FieldDeclarationSyntax fieldDecl)
                     continue;
 
-                if (variable.Initializer?.Value is not (
-                    ObjectCreationExpressionSyntax or
-                    ImplicitObjectCreationExpressionSyntax))
-                    continue;
-
-                ArgumentSyntax? firstArg = variable.Initializer.Value switch
+                foreach (var variable in fieldDecl.Declaration.Variables)
                 {
-                    ObjectCreationExpressionSyntax oce => oce.ArgumentList?.Arguments.FirstOrDefault(),
-                    ImplicitObjectCreationExpressionSyntax ioce => ioce.ArgumentList?.Arguments.FirstOrDefault(),
-                    _ => null
-                };
+                    cancellationToken.ThrowIfCancellationRequested();
 
-                if (firstArg is null)
-                    continue;
+                    var fieldName = variable.Identifier.Text;
+                    if (!memberSet.Contains(fieldName))
+                        continue;
 
-                var constantValue = semanticModel.GetConstantValue(firstArg.Expression, cancellationToken);
-                if (!constantValue.HasValue || constantValue.Value is null)
-                    continue;
+                    if (variable.Initializer?.Value is not (
+                        ObjectCreationExpressionSyntax or
+                        ImplicitObjectCreationExpressionSyntax))
+                        continue;
 
-                var key = constantValue.Value.ToString()!;
-                if (!valueToField.TryAdd(key, fieldName))
-                {
-                    var fieldSymbol = classSymbol.GetMembers(fieldName).OfType<IFieldSymbol>().FirstOrDefault();
-                    diagnostics.Add(new DiagnosticInfo(
-                        DiagnosticDescriptors.DuplicateValue,
-                        fieldSymbol?.CreateLocationInfo(),
-                        className,
-                        valueToField[key],
-                        fieldName));
+                    ArgumentSyntax? firstArg = variable.Initializer.Value switch
+                    {
+                        ObjectCreationExpressionSyntax oce => oce.ArgumentList?.Arguments.FirstOrDefault(),
+                        ImplicitObjectCreationExpressionSyntax ioce => ioce.ArgumentList?.Arguments.FirstOrDefault(),
+                        _ => null
+                    };
+
+                    if (firstArg is null)
+                        continue;
+
+                    var constantValue = semanticModel.GetConstantValue(firstArg.Expression, cancellationToken);
+                    if (!constantValue.HasValue || constantValue.Value is null)
+                        continue;
+
+                    if (!valueToField.TryAdd(constantValue.Value, fieldName))
+                    {
+                        var fieldSymbol = classSymbol.GetMembers(fieldName).OfType<IFieldSymbol>().FirstOrDefault();
+                        diagnostics.Add(new DiagnosticInfo(
+                            DiagnosticDescriptors.DuplicateValue,
+                            fieldSymbol?.CreateLocationInfo(),
+                            className,
+                            valueToField[constantValue.Value],
+                            fieldName));
+                    }
                 }
             }
         }
@@ -233,7 +240,11 @@ internal static class EnumSyntaxProvider
                 (_, TypeKind.Interface) => "interface",
                 _ => "class"
             };
-            result.Insert(0, $"partial {keyword} {current.Name}");
+            // Include static modifier and type parameters so the generated partial declaration
+            // matches the original (e.g. static partial class Outer or partial class Outer<T>).
+            var staticModifier = current.IsStatic ? "static " : "";
+            var nameWithTypeParams = current.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+            result.Insert(0, $"partial {staticModifier}{keyword} {nameWithTypeParams}");
             current = current.ContainingType;
         }
         return result.ToEquatableArray();
