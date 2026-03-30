@@ -28,14 +28,45 @@ internal static class EnumEmitter
         var model = new
         {
             GeneratedCodeAttribute,
-            info.Namespace,
             info.ClassName,
             info.FullyQualifiedClassName,
             info.ValueTypeFullyQualified,
             MemberNames = info.MemberNames.ToArray(),
+            Preamble = BuildPreamble(info),
+            Suffix = BuildSuffix(info),
         };
 
         var outputCode = TemplateHelper.Render("Templates.OptimizedEnum.scriban", model);
-        context.AddSource($"{info.ClassName}.g.cs", outputCode);
+        // Use the fully-qualified name (minus "global::") as the hint name to avoid
+        // collisions when two types share a class name in different namespaces.
+        var hintName = info.FullyQualifiedClassName.Replace("global::", "") + ".g.cs";
+        context.AddSource(hintName, outputCode);
+    }
+
+    private static string BuildPreamble(EnumInfo info)
+    {
+        if (info.Namespace is null && info.ContainingTypeNames.Length == 0)
+            return string.Empty;
+
+        var sb = new System.Text.StringBuilder();
+        if (info.Namespace is not null)
+            sb.Append("namespace ").Append(info.Namespace).Append(";\n\n");
+
+        foreach (var ct in info.ContainingTypeNames)
+            sb.Append(ct).Append("\n{\n");
+
+        return sb.ToString();
+    }
+
+    private static string BuildSuffix(EnumInfo info)
+    {
+        if (info.ContainingTypeNames.Length == 0)
+            return string.Empty;
+
+        var sb = new System.Text.StringBuilder();
+        for (var i = 0; i < info.ContainingTypeNames.Length; i++)
+            sb.Append("\n}");
+
+        return sb.ToString();
     }
 }

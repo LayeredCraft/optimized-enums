@@ -9,10 +9,7 @@
 
 #nullable enable
 
-{{~ if namespace != null ~}}
-namespace {{ namespace }};
-
-{{~ end ~}}
+{{ preamble ~}}
 {{ generated_code_attribute }}
 partial class {{ class_name }}
 {
@@ -98,4 +95,4 @@ partial class {{ class_name }}
 
     {{ generated_code_attribute }}
     public static bool ContainsValue({{ value_type_fully_qualified }} value) => s_byValue.ContainsKey(value);
-}
+}{{ suffix }}

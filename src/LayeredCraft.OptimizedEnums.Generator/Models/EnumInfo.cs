@@ -12,6 +12,7 @@ internal sealed record EnumInfo(
     string FullyQualifiedClassName,
     string ValueTypeFullyQualified,
     EquatableArray<string> MemberNames,
+    EquatableArray<string> ContainingTypeNames,
     EquatableArray<DiagnosticInfo> Diagnostics,
     LocationInfo? Location
 )
@@ -23,9 +24,10 @@ internal sealed record EnumInfo(
         && FullyQualifiedClassName == other.FullyQualifiedClassName
         && ValueTypeFullyQualified == other.ValueTypeFullyQualified
         && MemberNames == other.MemberNames
+        && ContainingTypeNames == other.ContainingTypeNames
         && Diagnostics == other.Diagnostics;
 
     public override int GetHashCode() =>
         HashCode.Combine(Namespace, ClassName, FullyQualifiedClassName, ValueTypeFullyQualified,
-            MemberNames, Diagnostics);
+            MemberNames, ContainingTypeNames, Diagnostics);
 }

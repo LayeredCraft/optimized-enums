@@ -51,6 +51,7 @@ internal static class EnumSyntaxProvider
                 FullyQualifiedClassName: classSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                 ValueTypeFullyQualified: string.Empty,
                 MemberNames: EquatableArray<string>.Empty,
+                ContainingTypeNames: EquatableArray<string>.Empty,
                 Diagnostics: diagnostics.ToEquatableArray(),
                 Location: location);
         }
@@ -134,6 +135,7 @@ internal static class EnumSyntaxProvider
             FullyQualifiedClassName: classSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
             ValueTypeFullyQualified: valueTypeFullyQualified,
             MemberNames: validMembers.ToEquatableArray(),
+            ContainingTypeNames: GetContainingTypeDeclarations(classSymbol),
             Diagnostics: diagnostics.ToEquatableArray(),
             Location: location);
     }
@@ -214,6 +216,25 @@ internal static class EnumSyntaxProvider
                 }
             }
         }
+    }
+
+    private static EquatableArray<string> GetContainingTypeDeclarations(INamedTypeSymbol symbol)
+    {
+        var result = new List<string>();
+        var current = symbol.ContainingType;
+        while (current is not null)
+        {
+            var keyword = (current.IsRecord, current.TypeKind) switch
+            {
+                (true, TypeKind.Struct) => "record struct",
+                (true, _) => "record",
+                (_, TypeKind.Struct) => "struct",
+                _ => "class"
+            };
+            result.Insert(0, $"partial {keyword} {current.Name}");
+            current = current.ContainingType;
+        }
+        return result.ToEquatableArray();
     }
 
     private static string? GetNamespace(INamedTypeSymbol symbol) =>

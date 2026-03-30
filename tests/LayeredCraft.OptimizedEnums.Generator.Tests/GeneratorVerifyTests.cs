@@ -139,6 +139,61 @@ public class GeneratorVerifyTests
             TestContext.Current.CancellationToken);
 
     [Fact]
+    public async Task NestedType() =>
+        await GeneratorTestHelpers.Verify(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public partial class Outer
+                    {
+                        public sealed partial class Status : OptimizedEnum<Status, int>
+                        {
+                            public static readonly Status Active = new(1, nameof(Active));
+                            public static readonly Status Inactive = new(2, nameof(Inactive));
+
+                            private Status(int value, string name) : base(value, name) { }
+                        }
+                    }
+                    """,
+                ExpectedTrees = 1,
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task SameClassName_DifferentNamespaces() =>
+        await GeneratorTestHelpers.Verify(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain1
+                    {
+                        public sealed partial class Status : OptimizedEnum<Status, int>
+                        {
+                            public static readonly Status Active = new(1, nameof(Active));
+                            private Status(int value, string name) : base(value, name) { }
+                        }
+                    }
+
+                    namespace MyApp.Domain2
+                    {
+                        public sealed partial class Status : OptimizedEnum<Status, int>
+                        {
+                            public static readonly Status Active = new(1, nameof(Active));
+                            private Status(int value, string name) : base(value, name) { }
+                        }
+                    }
+                    """,
+                ExpectedTrees = 2,
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
     public async Task Warning_NonPrivateConstructor() =>
         await GeneratorTestHelpers.Verify(
             new VerifyTestOptions
