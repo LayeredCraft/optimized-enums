@@ -1,0 +1,165 @@
+using Microsoft.CodeAnalysis;
+
+namespace LayeredCraft.OptimizedEnums.Generator.Tests;
+
+public class GeneratorVerifyTests
+{
+    [Fact]
+    public async Task SimpleEnum_WithNamespace() =>
+        await GeneratorTestHelpers.Verify(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int>
+                    {
+                        public static readonly OrderStatus Pending = new(1, nameof(Pending));
+                        public static readonly OrderStatus Paid = new(2, nameof(Paid));
+                        public static readonly OrderStatus Shipped = new(3, nameof(Shipped));
+
+                        private OrderStatus(int value, string name) : base(value, name) { }
+                    }
+                    """,
+                ExpectedTrees = 1,
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task SimpleEnum_GlobalNamespace() =>
+        await GeneratorTestHelpers.Verify(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    public sealed partial class Priority : OptimizedEnum<Priority, int>
+                    {
+                        public static readonly Priority Low = new(1, nameof(Low));
+                        public static readonly Priority Medium = new(2, nameof(Medium));
+                        public static readonly Priority High = new(3, nameof(High));
+
+                        private Priority(int value, string name) : base(value, name) { }
+                    }
+                    """,
+                ExpectedTrees = 1,
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task StringValueType() =>
+        await GeneratorTestHelpers.Verify(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public sealed partial class Color : OptimizedEnum<Color, string>
+                    {
+                        public static readonly Color Red = new("red", nameof(Red));
+                        public static readonly Color Green = new("green", nameof(Green));
+                        public static readonly Color Blue = new("blue", nameof(Blue));
+
+                        private Color(string value, string name) : base(value, name) { }
+                    }
+                    """,
+                ExpectedTrees = 1,
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task MultipleMembers() =>
+        await GeneratorTestHelpers.Verify(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public sealed partial class DayOfWeek : OptimizedEnum<DayOfWeek, int>
+                    {
+                        public static readonly DayOfWeek Monday = new(1, nameof(Monday));
+                        public static readonly DayOfWeek Tuesday = new(2, nameof(Tuesday));
+                        public static readonly DayOfWeek Wednesday = new(3, nameof(Wednesday));
+                        public static readonly DayOfWeek Thursday = new(4, nameof(Thursday));
+                        public static readonly DayOfWeek Friday = new(5, nameof(Friday));
+                        public static readonly DayOfWeek Saturday = new(6, nameof(Saturday));
+                        public static readonly DayOfWeek Sunday = new(7, nameof(Sunday));
+
+                        private DayOfWeek(int value, string name) : base(value, name) { }
+                    }
+                    """,
+                ExpectedTrees = 1,
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task Error_NotPartial() =>
+        await GeneratorTestHelpers.VerifyFailure(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public sealed class OrderStatus : OptimizedEnum<OrderStatus, int>
+                    {
+                        public static readonly OrderStatus Pending = new(1, nameof(Pending));
+
+                        private OrderStatus(int value, string name) : base(value, name) { }
+                    }
+                    """,
+                ExpectedDiagnosticId = "OE0001",
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task Error_NoMembers() =>
+        await GeneratorTestHelpers.VerifyFailure(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int>
+                    {
+                        private OrderStatus(int value, string name) : base(value, name) { }
+                    }
+                    """,
+                ExpectedDiagnosticId = "OE0004",
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task Warning_NonPrivateConstructor() =>
+        await GeneratorTestHelpers.Verify(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int>
+                    {
+                        public static readonly OrderStatus Pending = new(1, nameof(Pending));
+
+                        public OrderStatus(int value, string name) : base(value, name) { }
+                    }
+                    """,
+                DiagnosticsToSuppress = new Dictionary<string, ReportDiagnostic>
+                {
+                    ["OE0101"] = ReportDiagnostic.Suppress,
+                },
+                ExpectedTrees = 1,
+            },
+            TestContext.Current.CancellationToken);
+}

@@ -1,0 +1,17 @@
+{
+  Diagnostics: [
+    {
+      Location: Program.cs: (4,0)-(7,1),
+      Message: The class 'OrderStatus' has no public static readonly fields of its own type,
+      Severity: Error,
+      Descriptor: {
+        Id: OE0004,
+        Title: No enum members found,
+        MessageFormat: The class '{0}' has no public static readonly fields of its own type,
+        Category: OptimizedEnums.Usage,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

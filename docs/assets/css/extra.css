@@ -1,0 +1,136 @@
+/* Custom styles for LayeredCraft.OptimizedEnums documentation */
+
+/* Improve code block styling */
+.highlight pre {
+  border-radius: 6px;
+}
+
+/* Better table styling */
+.md-typeset table:not([class]) {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 4px;
+}
+
+.md-typeset table:not([class]) th {
+  background-color: var(--md-code-bg-color);
+  font-weight: 600;
+}
+
+/* Improve admonition spacing */
+.md-typeset .admonition {
+  margin: 1.5em 0;
+}
+
+/* Better spacing for documentation sections */
+.md-typeset h2 {
+  margin-top: 2em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-typeset h3 {
+  margin-top: 1.5em;
+}
+
+/* Improve blockquote styling */
+.md-typeset blockquote {
+  border-left: 4px solid var(--md-primary-fg-color);
+  padding-left: 1em;
+}
+
+/* Badge styling for version, build status, etc. */
+.md-typeset p > img[src*="shields.io"],
+.md-typeset p > img[src*="badge"] {
+  margin: 0 0.25em;
+  display: inline-block;
+}
+
+/* Improve navigation for home page */
+.md-typeset .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+/* Feature boxes for home page */
+.feature-box {
+  padding: 1.5rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  background-color: var(--md-code-bg-color);
+}
+
+.feature-box h3 {
+  margin-top: 0;
+  color: var(--md-primary-fg-color);
+}
+
+/* Code example improvements */
+.md-typeset code {
+  word-break: break-word;
+}
+
+/* Improve keyboard key styling */
+.md-typeset kbd {
+  padding: 0.2em 0.4em;
+  font-size: 0.85em;
+  background-color: var(--md-code-bg-color);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 3px;
+  box-shadow: 0 1px 0 var(--md-default-fg-color--lightest);
+}
+
+/* Improve footer styling */
+.md-footer__inner {
+  padding-top: 1rem;
+}
+
+/* Custom alert boxes using admonitions */
+.md-typeset .admonition.info {
+  border-left-color: var(--md-primary-fg-color);
+}
+
+.md-typeset .admonition.tip {
+  border-left-color: var(--md-accent-fg-color);
+}
+
+/* Improve inline code in tables */
+.md-typeset table code {
+  white-space: nowrap;
+}
+
+/* Better navigation tabs on mobile */
+@media screen and (max-width: 76.1875em) {
+  .md-tabs {
+    display: flex;
+    overflow-x: auto;
+  }
+}
+
+/* Improve search result highlighting */
+.md-search-result__article--document {
+  padding: 1rem;
+}
+
+/* Improve ordered and unordered lists */
+.md-typeset ol,
+.md-typeset ul {
+  margin: 1em 0;
+}
+
+.md-typeset li {
+  margin: 0.5em 0;
+}
+
+/* Better spacing for definition lists */
+.md-typeset dd {
+  margin-left: 2em;
+  margin-top: 0.5em;
+}
+
+/* Improve horizontal rules */
+.md-typeset hr {
+  margin: 2em 0;
+  border-bottom: 2px solid var(--md-default-fg-color--lightest);
+}

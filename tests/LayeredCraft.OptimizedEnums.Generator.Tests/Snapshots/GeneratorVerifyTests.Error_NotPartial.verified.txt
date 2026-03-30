@@ -1,0 +1,17 @@
+{
+  Diagnostics: [
+    {
+      Location: Program.cs: (4,0)-(9,1),
+      Message: The class 'OrderStatus' must be declared as partial for OptimizedEnum source generation,
+      Severity: Error,
+      Descriptor: {
+        Id: OE0001,
+        Title: OptimizedEnum class must be partial,
+        MessageFormat: The class '{0}' must be declared as partial for OptimizedEnum source generation,
+        Category: OptimizedEnums.Usage,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}
