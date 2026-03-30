@@ -17,6 +17,9 @@ internal sealed record EnumInfo(
     LocationInfo? Location
 )
 {
+    // Location is intentionally excluded from equality so that a position-only change
+    // (e.g. the user adds a blank line above the class) does not bust the incremental
+    // cache and trigger unnecessary re-emission of the same generated file.
     public bool Equals(EnumInfo? other) =>
         other is not null
         && Namespace == other.Namespace

@@ -15,29 +15,32 @@ namespace MyApp.Domain;
 [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
 partial class Color
 {
-    private static readonly global::MyApp.Domain.Color[] s_all = new global::MyApp.Domain.Color[]
-    {
-        Red,
-        Green,
-        Blue
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<global::MyApp.Domain.Color> s_all =
+        global::System.Array.AsReadOnly(new global::MyApp.Domain.Color[]
+        {
+            Red,
+            Green,
+            Blue
+        });
 
-    private static readonly string[] s_names = new string[]
-    {
-        Red.Name,
-        Green.Name,
-        Blue.Name
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<string> s_names =
+        global::System.Array.AsReadOnly(new string[]
+        {
+            Red.Name,
+            Green.Name,
+            Blue.Name
+        });
 
-    private static readonly string[] s_values = new string[]
-    {
-        Red.Value,
-        Green.Value,
-        Blue.Value
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<string> s_values =
+        global::System.Array.AsReadOnly(new string[]
+        {
+            Red.Value,
+            Green.Value,
+            Blue.Value
+        });
 
     private static readonly global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain.Color> s_byName =
-        new global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain.Color>(global::System.StringComparer.Ordinal)
+        new global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain.Color>(3, global::System.StringComparer.Ordinal)
         {
             [Red.Name] = Red,
             [Green.Name] = Green,
@@ -45,7 +48,7 @@ partial class Color
         };
 
     private static readonly global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain.Color> s_byValue =
-        new global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain.Color>()
+        new global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain.Color>(3)
         {
             [Red.Value] = Red,
             [Green.Value] = Green,
@@ -62,7 +65,7 @@ partial class Color
     public static global::System.Collections.Generic.IReadOnlyList<string> Values => s_values;
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
-    public static int Count => s_all.Length;
+    public const int Count = 3;
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
     public static global::MyApp.Domain.Color FromName(string name)

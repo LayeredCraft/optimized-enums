@@ -17,33 +17,36 @@ partial class Outer
 [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
 partial class Status
 {
-    private static readonly global::MyApp.Domain.Outer.Status[] s_all = new global::MyApp.Domain.Outer.Status[]
-    {
-        Active,
-        Inactive
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<global::MyApp.Domain.Outer.Status> s_all =
+        global::System.Array.AsReadOnly(new global::MyApp.Domain.Outer.Status[]
+        {
+            Active,
+            Inactive
+        });
 
-    private static readonly string[] s_names = new string[]
-    {
-        Active.Name,
-        Inactive.Name
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<string> s_names =
+        global::System.Array.AsReadOnly(new string[]
+        {
+            Active.Name,
+            Inactive.Name
+        });
 
-    private static readonly int[] s_values = new int[]
-    {
-        Active.Value,
-        Inactive.Value
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<int> s_values =
+        global::System.Array.AsReadOnly(new int[]
+        {
+            Active.Value,
+            Inactive.Value
+        });
 
     private static readonly global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain.Outer.Status> s_byName =
-        new global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain.Outer.Status>(global::System.StringComparer.Ordinal)
+        new global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain.Outer.Status>(2, global::System.StringComparer.Ordinal)
         {
             [Active.Name] = Active,
             [Inactive.Name] = Inactive
         };
 
     private static readonly global::System.Collections.Generic.Dictionary<int, global::MyApp.Domain.Outer.Status> s_byValue =
-        new global::System.Collections.Generic.Dictionary<int, global::MyApp.Domain.Outer.Status>()
+        new global::System.Collections.Generic.Dictionary<int, global::MyApp.Domain.Outer.Status>(2)
         {
             [Active.Value] = Active,
             [Inactive.Value] = Inactive
@@ -59,7 +62,7 @@ partial class Status
     public static global::System.Collections.Generic.IReadOnlyList<int> Values => s_values;
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
-    public static int Count => s_all.Length;
+    public const int Count = 2;
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
     public static global::MyApp.Domain.Outer.Status FromName(string name)

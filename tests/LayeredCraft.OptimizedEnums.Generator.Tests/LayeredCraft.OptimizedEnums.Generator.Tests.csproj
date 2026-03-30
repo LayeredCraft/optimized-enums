@@ -8,6 +8,7 @@
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
     <LangVersion>default</LangVersion>
+    <NoWarn>MSB3243</NoWarn>
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
   </PropertyGroup>

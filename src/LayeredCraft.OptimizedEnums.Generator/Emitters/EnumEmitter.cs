@@ -7,20 +7,12 @@ namespace LayeredCraft.OptimizedEnums.Generator.Emitters;
 
 internal static class EnumEmitter
 {
-    private static string GeneratedCodeAttribute
-    {
-        get
-        {
-            if (field is null)
-            {
-                var assembly = Assembly.GetExecutingAssembly();
-                var name = assembly.GetName().Name;
-                var version = assembly.GetName().Version!.ToString();
-                field = $"""[global::System.CodeDom.Compiler.GeneratedCode("{name}", "{version}")]""";
-            }
+    private static readonly string GeneratedCodeAttribute = BuildGeneratedCodeAttribute();
 
-            return field;
-        }
+    private static string BuildGeneratedCodeAttribute()
+    {
+        var asm = Assembly.GetExecutingAssembly();
+        return $"""[global::System.CodeDom.Compiler.GeneratedCode("{asm.GetName().Name}", "{asm.GetName().Version}")]""";
     }
 
     internal static void Generate(SourceProductionContext context, EnumInfo info)
@@ -36,11 +28,23 @@ internal static class EnumEmitter
             Suffix = BuildSuffix(info),
         };
 
-        var outputCode = TemplateHelper.Render("Templates.OptimizedEnum.scriban", model);
         // Use the fully-qualified name (minus "global::") as the hint name to avoid
         // collisions when two types share a class name in different namespaces.
         var hintName = info.FullyQualifiedClassName.Replace("global::", "") + ".g.cs";
-        context.AddSource(hintName, outputCode);
+
+        try
+        {
+            var outputCode = TemplateHelper.Render("Templates.OptimizedEnum.scriban", model);
+            context.AddSource(hintName, outputCode);
+        }
+        catch (Exception ex)
+        {
+            context.ReportDiagnostic(Diagnostic.Create(
+                DiagnosticDescriptors.GeneratorInternalError,
+                info.Location?.ToLocation(),
+                info.ClassName,
+                ex.Message));
+        }
     }
 
     private static string BuildPreamble(EnumInfo info)

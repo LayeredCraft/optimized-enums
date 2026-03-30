@@ -13,29 +13,32 @@
 [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
 partial class Priority
 {
-    private static readonly global::Priority[] s_all = new global::Priority[]
-    {
-        Low,
-        Medium,
-        High
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<global::Priority> s_all =
+        global::System.Array.AsReadOnly(new global::Priority[]
+        {
+            Low,
+            Medium,
+            High
+        });
 
-    private static readonly string[] s_names = new string[]
-    {
-        Low.Name,
-        Medium.Name,
-        High.Name
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<string> s_names =
+        global::System.Array.AsReadOnly(new string[]
+        {
+            Low.Name,
+            Medium.Name,
+            High.Name
+        });
 
-    private static readonly int[] s_values = new int[]
-    {
-        Low.Value,
-        Medium.Value,
-        High.Value
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<int> s_values =
+        global::System.Array.AsReadOnly(new int[]
+        {
+            Low.Value,
+            Medium.Value,
+            High.Value
+        });
 
     private static readonly global::System.Collections.Generic.Dictionary<string, global::Priority> s_byName =
-        new global::System.Collections.Generic.Dictionary<string, global::Priority>(global::System.StringComparer.Ordinal)
+        new global::System.Collections.Generic.Dictionary<string, global::Priority>(3, global::System.StringComparer.Ordinal)
         {
             [Low.Name] = Low,
             [Medium.Name] = Medium,
@@ -43,7 +46,7 @@ partial class Priority
         };
 
     private static readonly global::System.Collections.Generic.Dictionary<int, global::Priority> s_byValue =
-        new global::System.Collections.Generic.Dictionary<int, global::Priority>()
+        new global::System.Collections.Generic.Dictionary<int, global::Priority>(3)
         {
             [Low.Value] = Low,
             [Medium.Value] = Medium,
@@ -60,7 +63,7 @@ partial class Priority
     public static global::System.Collections.Generic.IReadOnlyList<int> Values => s_values;
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
-    public static int Count => s_all.Length;
+    public const int Count = 3;
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
     public static global::Priority FromName(string name)

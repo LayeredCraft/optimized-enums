@@ -170,6 +170,7 @@ internal static class EnumSyntaxProvider
     {
         // Build a mapping of field name -> constant value (best effort, skips non-literals)
         var valueToField = new Dictionary<string, string>(StringComparer.Ordinal);
+        var memberSet = new HashSet<string>(memberNames, StringComparer.Ordinal);
 
         foreach (var member in classDecl.Members)
         {
@@ -181,7 +182,7 @@ internal static class EnumSyntaxProvider
                 cancellationToken.ThrowIfCancellationRequested();
 
                 var fieldName = variable.Identifier.Text;
-                if (!memberNames.Contains(fieldName))
+                if (!memberSet.Contains(fieldName))
                     continue;
 
                 if (variable.Initializer?.Value is not (
@@ -229,6 +230,7 @@ internal static class EnumSyntaxProvider
                 (true, TypeKind.Struct) => "record struct",
                 (true, _) => "record",
                 (_, TypeKind.Struct) => "struct",
+                (_, TypeKind.Interface) => "interface",
                 _ => "class"
             };
             result.Insert(0, $"partial {keyword} {current.Name}");

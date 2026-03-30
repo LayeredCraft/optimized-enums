@@ -15,29 +15,32 @@ namespace MyApp.Domain2;
 [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
 partial class Status
 {
-    private static readonly global::MyApp.Domain2.Status[] s_all = new global::MyApp.Domain2.Status[]
-    {
-        Active
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<global::MyApp.Domain2.Status> s_all =
+        global::System.Array.AsReadOnly(new global::MyApp.Domain2.Status[]
+        {
+            Active
+        });
 
-    private static readonly string[] s_names = new string[]
-    {
-        Active.Name
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<string> s_names =
+        global::System.Array.AsReadOnly(new string[]
+        {
+            Active.Name
+        });
 
-    private static readonly int[] s_values = new int[]
-    {
-        Active.Value
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<int> s_values =
+        global::System.Array.AsReadOnly(new int[]
+        {
+            Active.Value
+        });
 
     private static readonly global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain2.Status> s_byName =
-        new global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain2.Status>(global::System.StringComparer.Ordinal)
+        new global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain2.Status>(1, global::System.StringComparer.Ordinal)
         {
             [Active.Name] = Active
         };
 
     private static readonly global::System.Collections.Generic.Dictionary<int, global::MyApp.Domain2.Status> s_byValue =
-        new global::System.Collections.Generic.Dictionary<int, global::MyApp.Domain2.Status>()
+        new global::System.Collections.Generic.Dictionary<int, global::MyApp.Domain2.Status>(1)
         {
             [Active.Value] = Active
         };
@@ -52,7 +55,7 @@ partial class Status
     public static global::System.Collections.Generic.IReadOnlyList<int> Values => s_values;
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
-    public static int Count => s_all.Length;
+    public const int Count = 1;
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
     public static global::MyApp.Domain2.Status FromName(string name)

@@ -217,4 +217,69 @@ public class GeneratorVerifyTests
                 ExpectedTrees = 1,
             },
             TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task Warning_OE0101_NonPrivateConstructor_IsEmitted() =>
+        await GeneratorTestHelpers.VerifyFailure(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int>
+                    {
+                        public static readonly OrderStatus Pending = new(1, nameof(Pending));
+
+                        public OrderStatus(int value, string name) : base(value, name) { }
+                    }
+                    """,
+                ExpectedDiagnosticId = "OE0101",
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task Warning_OE0102_NonReadonlyField_IsEmitted() =>
+        await GeneratorTestHelpers.VerifyFailure(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int>
+                    {
+                        public static readonly OrderStatus Pending = new(1, nameof(Pending));
+                        public static OrderStatus NonReadonly = new(2, nameof(NonReadonly));
+
+                        private OrderStatus(int value, string name) : base(value, name) { }
+                    }
+                    """,
+                ExpectedDiagnosticId = "OE0102",
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task Error_OE0005_DuplicateValue_IsEmitted() =>
+        await GeneratorTestHelpers.VerifyFailure(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int>
+                    {
+                        public static readonly OrderStatus Pending = new(1, nameof(Pending));
+                        public static readonly OrderStatus Duplicate = new(1, nameof(Duplicate));
+
+                        private OrderStatus(int value, string name) : base(value, name) { }
+                    }
+                    """,
+                ExpectedDiagnosticId = "OE0005",
+            },
+            TestContext.Current.CancellationToken);
 }

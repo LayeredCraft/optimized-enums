@@ -11,7 +11,7 @@
     <PackageVersion Include="Basic.Reference.Assemblies.Net80" Version="1.8.4" />
     <PackageVersion Include="Basic.Reference.Assemblies.Net90" Version="1.8.4" />
     <PackageVersion Include="Basic.Reference.Assemblies.Net100" Version="1.8.4" />
-    <PackageVersion Include="BenchmarkDotNet" Version="0.14.0" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="Meziantou.Polyfill" Version="1.0.105" />
     <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis" Version="5.0.0" />

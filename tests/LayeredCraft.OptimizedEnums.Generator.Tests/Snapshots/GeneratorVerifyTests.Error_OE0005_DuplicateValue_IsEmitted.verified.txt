@@ -1,0 +1,17 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: Program.cs: (7,39)-(7,48),
+      Message: The class 'OrderStatus' has duplicate value on fields 'Pending' and 'Duplicate',
+      Severity: Error,
+      Descriptor: {
+        Id: OE0005,
+        Title: Duplicate enum value,
+        MessageFormat: The class '{0}' has duplicate value on fields '{1}' and '{2}',
+        Category: OptimizedEnums.Usage,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

@@ -53,4 +53,12 @@ internal static class DiagnosticDescriptors
         UsageCategory,
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
+
+    internal static readonly DiagnosticDescriptor GeneratorInternalError = new(
+        "OE9001",
+        "OptimizedEnum generator internal error",
+        "An unexpected error occurred while generating code for '{0}': {1}",
+        UsageCategory,
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
 }

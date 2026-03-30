@@ -11,11 +11,19 @@ internal sealed record DiagnosticInfo(
 {
     public bool Equals(DiagnosticInfo? other) =>
         other is not null
-        && Equals(DiagnosticDescriptor.Id, other.DiagnosticDescriptor.Id)
-        && Equals(LocationInfo, other.LocationInfo);
+        && DiagnosticDescriptor.Id == other.DiagnosticDescriptor.Id
+        && Equals(LocationInfo, other.LocationInfo)
+        && MessageArgs.SequenceEqual(other.MessageArgs);
 
-    public override int GetHashCode() =>
-        HashCode.Combine(DiagnosticDescriptor.Id, LocationInfo);
+    public override int GetHashCode()
+    {
+        var hash = new HashCode();
+        hash.Add(DiagnosticDescriptor.Id);
+        hash.Add(LocationInfo);
+        foreach (var arg in MessageArgs)
+            hash.Add(arg);
+        return hash.ToHashCode();
+    }
 }
 
 internal static class DiagnosticInfoExtensions

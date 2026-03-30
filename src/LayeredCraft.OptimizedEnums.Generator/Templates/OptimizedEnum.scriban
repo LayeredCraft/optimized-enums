@@ -13,29 +13,32 @@
 {{ generated_code_attribute }}
 partial class {{ class_name }}
 {
-    private static readonly {{ fully_qualified_class_name }}[] s_all = new {{ fully_qualified_class_name }}[]
-    {
-        {{~ for name in member_names ~}}
-        {{ name }}{{ if !for.last }},{{ end }}
-        {{~ end ~}}
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<{{ fully_qualified_class_name }}> s_all =
+        global::System.Array.AsReadOnly(new {{ fully_qualified_class_name }}[]
+        {
+            {{~ for name in member_names ~}}
+            {{ name }}{{ if !for.last }},{{ end }}
+            {{~ end ~}}
+        });
 
-    private static readonly string[] s_names = new string[]
-    {
-        {{~ for name in member_names ~}}
-        {{ name }}.Name{{ if !for.last }},{{ end }}
-        {{~ end ~}}
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<string> s_names =
+        global::System.Array.AsReadOnly(new string[]
+        {
+            {{~ for name in member_names ~}}
+            {{ name }}.Name{{ if !for.last }},{{ end }}
+            {{~ end ~}}
+        });
 
-    private static readonly {{ value_type_fully_qualified }}[] s_values = new {{ value_type_fully_qualified }}[]
-    {
-        {{~ for name in member_names ~}}
-        {{ name }}.Value{{ if !for.last }},{{ end }}
-        {{~ end ~}}
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<{{ value_type_fully_qualified }}> s_values =
+        global::System.Array.AsReadOnly(new {{ value_type_fully_qualified }}[]
+        {
+            {{~ for name in member_names ~}}
+            {{ name }}.Value{{ if !for.last }},{{ end }}
+            {{~ end ~}}
+        });
 
     private static readonly global::System.Collections.Generic.Dictionary<string, {{ fully_qualified_class_name }}> s_byName =
-        new global::System.Collections.Generic.Dictionary<string, {{ fully_qualified_class_name }}>(global::System.StringComparer.Ordinal)
+        new global::System.Collections.Generic.Dictionary<string, {{ fully_qualified_class_name }}>({{ member_names.size }}, global::System.StringComparer.Ordinal)
         {
             {{~ for name in member_names ~}}
             [{{ name }}.Name] = {{ name }}{{ if !for.last }},{{ end }}
@@ -43,7 +46,7 @@ partial class {{ class_name }}
         };
 
     private static readonly global::System.Collections.Generic.Dictionary<{{ value_type_fully_qualified }}, {{ fully_qualified_class_name }}> s_byValue =
-        new global::System.Collections.Generic.Dictionary<{{ value_type_fully_qualified }}, {{ fully_qualified_class_name }}>()
+        new global::System.Collections.Generic.Dictionary<{{ value_type_fully_qualified }}, {{ fully_qualified_class_name }}>({{ member_names.size }})
         {
             {{~ for name in member_names ~}}
             [{{ name }}.Value] = {{ name }}{{ if !for.last }},{{ end }}
@@ -60,7 +63,7 @@ partial class {{ class_name }}
     public static global::System.Collections.Generic.IReadOnlyList<{{ value_type_fully_qualified }}> Values => s_values;
 
     {{ generated_code_attribute }}
-    public static int Count => s_all.Length;
+    public const int Count = {{ member_names.size }};
 
     {{ generated_code_attribute }}
     public static {{ fully_qualified_class_name }} FromName(string name)

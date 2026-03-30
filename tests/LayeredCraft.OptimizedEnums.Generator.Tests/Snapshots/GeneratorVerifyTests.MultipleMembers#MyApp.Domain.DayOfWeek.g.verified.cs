@@ -15,41 +15,44 @@ namespace MyApp.Domain;
 [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
 partial class DayOfWeek
 {
-    private static readonly global::MyApp.Domain.DayOfWeek[] s_all = new global::MyApp.Domain.DayOfWeek[]
-    {
-        Monday,
-        Tuesday,
-        Wednesday,
-        Thursday,
-        Friday,
-        Saturday,
-        Sunday
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<global::MyApp.Domain.DayOfWeek> s_all =
+        global::System.Array.AsReadOnly(new global::MyApp.Domain.DayOfWeek[]
+        {
+            Monday,
+            Tuesday,
+            Wednesday,
+            Thursday,
+            Friday,
+            Saturday,
+            Sunday
+        });
 
-    private static readonly string[] s_names = new string[]
-    {
-        Monday.Name,
-        Tuesday.Name,
-        Wednesday.Name,
-        Thursday.Name,
-        Friday.Name,
-        Saturday.Name,
-        Sunday.Name
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<string> s_names =
+        global::System.Array.AsReadOnly(new string[]
+        {
+            Monday.Name,
+            Tuesday.Name,
+            Wednesday.Name,
+            Thursday.Name,
+            Friday.Name,
+            Saturday.Name,
+            Sunday.Name
+        });
 
-    private static readonly int[] s_values = new int[]
-    {
-        Monday.Value,
-        Tuesday.Value,
-        Wednesday.Value,
-        Thursday.Value,
-        Friday.Value,
-        Saturday.Value,
-        Sunday.Value
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<int> s_values =
+        global::System.Array.AsReadOnly(new int[]
+        {
+            Monday.Value,
+            Tuesday.Value,
+            Wednesday.Value,
+            Thursday.Value,
+            Friday.Value,
+            Saturday.Value,
+            Sunday.Value
+        });
 
     private static readonly global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain.DayOfWeek> s_byName =
-        new global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain.DayOfWeek>(global::System.StringComparer.Ordinal)
+        new global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain.DayOfWeek>(7, global::System.StringComparer.Ordinal)
         {
             [Monday.Name] = Monday,
             [Tuesday.Name] = Tuesday,
@@ -61,7 +64,7 @@ partial class DayOfWeek
         };
 
     private static readonly global::System.Collections.Generic.Dictionary<int, global::MyApp.Domain.DayOfWeek> s_byValue =
-        new global::System.Collections.Generic.Dictionary<int, global::MyApp.Domain.DayOfWeek>()
+        new global::System.Collections.Generic.Dictionary<int, global::MyApp.Domain.DayOfWeek>(7)
         {
             [Monday.Value] = Monday,
             [Tuesday.Value] = Tuesday,
@@ -82,7 +85,7 @@ partial class DayOfWeek
     public static global::System.Collections.Generic.IReadOnlyList<int> Values => s_values;
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
-    public static int Count => s_all.Length;
+    public const int Count = 7;
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
     public static global::MyApp.Domain.DayOfWeek FromName(string name)

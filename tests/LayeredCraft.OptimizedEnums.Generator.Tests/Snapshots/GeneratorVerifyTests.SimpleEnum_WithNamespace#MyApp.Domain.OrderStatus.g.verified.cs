@@ -15,29 +15,32 @@ namespace MyApp.Domain;
 [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
 partial class OrderStatus
 {
-    private static readonly global::MyApp.Domain.OrderStatus[] s_all = new global::MyApp.Domain.OrderStatus[]
-    {
-        Pending,
-        Paid,
-        Shipped
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<global::MyApp.Domain.OrderStatus> s_all =
+        global::System.Array.AsReadOnly(new global::MyApp.Domain.OrderStatus[]
+        {
+            Pending,
+            Paid,
+            Shipped
+        });
 
-    private static readonly string[] s_names = new string[]
-    {
-        Pending.Name,
-        Paid.Name,
-        Shipped.Name
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<string> s_names =
+        global::System.Array.AsReadOnly(new string[]
+        {
+            Pending.Name,
+            Paid.Name,
+            Shipped.Name
+        });
 
-    private static readonly int[] s_values = new int[]
-    {
-        Pending.Value,
-        Paid.Value,
-        Shipped.Value
-    };
+    private static readonly global::System.Collections.ObjectModel.ReadOnlyCollection<int> s_values =
+        global::System.Array.AsReadOnly(new int[]
+        {
+            Pending.Value,
+            Paid.Value,
+            Shipped.Value
+        });
 
     private static readonly global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain.OrderStatus> s_byName =
-        new global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain.OrderStatus>(global::System.StringComparer.Ordinal)
+        new global::System.Collections.Generic.Dictionary<string, global::MyApp.Domain.OrderStatus>(3, global::System.StringComparer.Ordinal)
         {
             [Pending.Name] = Pending,
             [Paid.Name] = Paid,
@@ -45,7 +48,7 @@ partial class OrderStatus
         };
 
     private static readonly global::System.Collections.Generic.Dictionary<int, global::MyApp.Domain.OrderStatus> s_byValue =
-        new global::System.Collections.Generic.Dictionary<int, global::MyApp.Domain.OrderStatus>()
+        new global::System.Collections.Generic.Dictionary<int, global::MyApp.Domain.OrderStatus>(3)
         {
             [Pending.Value] = Pending,
             [Paid.Value] = Paid,
@@ -62,7 +65,7 @@ partial class OrderStatus
     public static global::System.Collections.Generic.IReadOnlyList<int> Values => s_values;
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
-    public static int Count => s_all.Length;
+    public const int Count = 3;
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
     public static global::MyApp.Domain.OrderStatus FromName(string name)
