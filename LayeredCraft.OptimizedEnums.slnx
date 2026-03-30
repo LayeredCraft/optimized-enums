@@ -1,0 +1,60 @@
+<Solution>
+  <Folder Name="/docs/">
+    <File Path="docs\changelog.md" />
+    <File Path="docs\contributing.md" />
+    <File Path="docs\index.md" />
+    <File Path="mkdocs.yml" />
+    <File Path="requirements.txt" />
+  </Folder>
+  <Folder Name="/docs/advanced/">
+    <File Path="docs\advanced\aot-trimming.md" />
+    <File Path="docs\advanced\diagnostics.md" />
+    <File Path="docs\advanced\performance.md" />
+  </Folder>
+  <Folder Name="/docs/api-reference/">
+    <File Path="docs\api-reference\base-class.md" />
+    <File Path="docs\api-reference\generated-members.md" />
+  </Folder>
+  <Folder Name="/docs/assets/">
+    <File Path="docs\assets\icon.png" />
+  </Folder>
+  <Folder Name="/docs/assets/css/">
+    <File Path="docs\assets\css\extra.css" />
+  </Folder>
+  <Folder Name="/docs/core-concepts/">
+    <File Path="docs\core-concepts\how-it-works.md" />
+    <File Path="docs\core-concepts\inheritance-model.md" />
+    <File Path="docs\core-concepts\source-generators.md" />
+  </Folder>
+  <Folder Name="/docs/getting-started/">
+    <File Path="docs\getting-started\installation.md" />
+    <File Path="docs\getting-started\quick-start.md" />
+  </Folder>
+  <Folder Name="/docs/usage/">
+    <File Path="docs\usage\defining-enums.md" />
+    <File Path="docs\usage\lookups.md" />
+    <File Path="docs\usage\string-values.md" />
+  </Folder>
+  <Folder Name="/git/">
+    <File Path=".gitignore" />
+    <File Path=".github\dependabot.yml" />
+    <File Path=".github\workflows\build.yaml" />
+    <File Path=".github\workflows\docs.yml" />
+    <File Path=".github\workflows\pr-build.yaml" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/LayeredCraft.OptimizedEnums/LayeredCraft.OptimizedEnums.csproj" />
+    <Project Path="src/LayeredCraft.OptimizedEnums.Generator/LayeredCraft.OptimizedEnums.Generator.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LayeredCraft.OptimizedEnums.Tests/LayeredCraft.OptimizedEnums.Tests.csproj" />
+    <Project Path="tests/LayeredCraft.OptimizedEnums.Generator.Tests/LayeredCraft.OptimizedEnums.Generator.Tests.csproj" />
+    <Project Path="tests/LayeredCraft.OptimizedEnums.Benchmarks/LayeredCraft.OptimizedEnums.Benchmarks.csproj" />
+  </Folder>
+</Solution>

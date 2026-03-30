@@ -1,0 +1,89 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IsPackable>true</IsPackable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <PackageId>LayeredCraft.OptimizedEnums</PackageId>
+    <AssemblyName>LayeredCraft.OptimizedEnums.Generator</AssemblyName>
+    <RootNamespace>LayeredCraft.OptimizedEnums.Generator</RootNamespace>
+    <Title>LayeredCraft.OptimizedEnums</Title>
+    <Description>High-performance alternative to SmartEnum using source generation. Provides zero-reflection, AOT-safe enum types with compile-time validation and O(1) lookup tables.</Description>
+    <PackageTags>enum;source-generator;smart-enum;dotnet;csharp;roslyn;aot</PackageTags>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <PackageScribanIncludeSource>true</PackageScribanIncludeSource>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference
+      Include="..\LayeredCraft.OptimizedEnums\LayeredCraft.OptimizedEnums.csproj"
+      PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Meziantou.Polyfill">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CSharp" PrivateAssets="all" GeneratePathProperty="true" />
+    <None
+      Include="$(PkgMicrosoft_CSharp)\lib\netstandard2.0\*.dll"
+      Pack="true"
+      PackagePath="analyzers/dotnet/cs"
+      Visible="false" />
+    <PackageReference Include="Scriban" IncludeAssets="Build" />
+  </ItemGroup>
+
+  <!-- Embed Scriban templates as resources -->
+  <ItemGroup>
+    <Compile Remove="Templates\*.scriban" />
+    <EmbeddedResource Include="Templates\*.scriban" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
+    <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+  </PropertyGroup>
+  <Target Name="GetDependencyTargetPaths">
+    <ItemGroup>
+      <TargetPathWithTargetPlatformMoniker
+        Include="$(PkgMicrosoft_CSharp)\lib\netstandard2.0\*.dll"
+        IncludeRuntimeDependency="false" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Pack generator DLL into analyzers folder -->
+  <ItemGroup>
+    <None
+      Include="$(OutputPath)\LayeredCraft.OptimizedEnums.Generator.dll"
+      Pack="true"
+      PackagePath="analyzers/dotnet/cs"
+      Visible="false" />
+    <!-- Pack runtime DLL into analyzers (so the generator can reference it) and lib (for consumers) -->
+    <None
+      Include="$(OutputPath)\LayeredCraft.OptimizedEnums.dll"
+      Pack="true"
+      PackagePath="analyzers/dotnet/cs"
+      Visible="false" />
+    <None
+      Include="$(OutputPath)\LayeredCraft.OptimizedEnums.dll"
+      Pack="true"
+      PackagePath="lib/netstandard2.0"
+      Visible="true" />
+    <None
+      Include="$(OutputPath)\LayeredCraft.OptimizedEnums.xml"
+      Pack="true"
+      PackagePath="lib/netstandard2.0"
+      Visible="true" />
+  </ItemGroup>
+</Project>

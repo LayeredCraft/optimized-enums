@@ -1,0 +1,4 @@
+<Project>
+  <!-- Override parent tests/Directory.Build.props to prevent test-specific global usings
+       from being applied to the benchmarks project, which does not reference them. -->
+</Project>

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <!-- PackageId is distinct from the generator to avoid NuGet ambiguity in the solution.
+         The generator's NuGet package (LayeredCraft.OptimizedEnums) bundles this DLL directly. -->
+    <PackageId>LayeredCraft.OptimizedEnums.Core</PackageId>
+    <!-- AssemblyName must match what the generator csproj packs as LayeredCraft.OptimizedEnums.dll -->
+    <AssemblyName>LayeredCraft.OptimizedEnums</AssemblyName>
+    <RootNamespace>LayeredCraft.OptimizedEnums</RootNamespace>
+  </PropertyGroup>
+</Project>

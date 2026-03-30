@@ -416,3 +416,25 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+.idea
+
+.config
+
+# Local scripts (not for source control)
+scripts/
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+*.received.*
+
+**/*.DotSettings.user
+/.claude/do_not_commit/
+/nupkg/

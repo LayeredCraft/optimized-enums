@@ -1,0 +1,18 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: Program.cs: (8,11)-(8,22),
+      Message: The class 'OrderStatus' has a non-private constructor; OptimizedEnum constructors should be private to prevent direct instantiation,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: OE0101,
+        Title: OptimizedEnum constructor should be private,
+        MessageFormat: The class '{0}' has a non-private constructor; OptimizedEnum constructors should be private to prevent direct instantiation,
+        Category: OptimizedEnums.Usage,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}
