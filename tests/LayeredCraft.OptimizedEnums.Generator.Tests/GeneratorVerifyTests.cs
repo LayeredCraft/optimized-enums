@@ -347,11 +347,29 @@ public class GeneratorVerifyTests
                         protected Status(int value, string name) : base(value, name) { }
                     }
                     """,
-                DiagnosticsToSuppress = new Dictionary<string, ReportDiagnostic>
-                {
-                    ["OE0101"] = ReportDiagnostic.Suppress,
-                },
                 ExpectedTrees = 1,
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task Warning_AbstractBase_WithOnlyInvalidMembers_StillSurfacesDiagnostics() =>
+        await GeneratorTestHelpers.VerifyFailure(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public abstract partial class DomainEnum<TSelf> : OptimizedEnum<TSelf, int>
+                        where TSelf : DomainEnum<TSelf>
+                    {
+                        public static DomainEnum<TSelf> BadField = null!;
+
+                        protected DomainEnum(int value, string name) : base(value, name) { }
+                    }
+                    """,
+                ExpectedDiagnosticId = "OE0102",
             },
             TestContext.Current.CancellationToken);
 
