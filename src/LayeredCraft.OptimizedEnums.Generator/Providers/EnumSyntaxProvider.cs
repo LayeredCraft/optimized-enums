@@ -62,17 +62,22 @@ internal static class EnumSyntaxProvider
 
         cancellationToken.ThrowIfCancellationRequested();
 
-        // OE0101: Warn about non-private constructors
-        foreach (var ctor in classSymbol.Constructors)
+        // OE0101: Warn about non-private constructors.
+        // Skip for abstract classes: a protected constructor is idiomatic and required
+        // so that concrete subclasses can invoke base(...).
+        if (!classSymbol.IsAbstract)
         {
-            if (ctor.IsImplicitlyDeclared)
-                continue;
-            if (ctor.DeclaredAccessibility != Accessibility.Private)
+            foreach (var ctor in classSymbol.Constructors)
             {
-                diagnostics.Add(new DiagnosticInfo(
-                    DiagnosticDescriptors.NonPrivateConstructor,
-                    ctor.CreateLocationInfo(),
-                    className));
+                if (ctor.IsImplicitlyDeclared)
+                    continue;
+                if (ctor.DeclaredAccessibility != Accessibility.Private)
+                {
+                    diagnostics.Add(new DiagnosticInfo(
+                        DiagnosticDescriptors.NonPrivateConstructor,
+                        ctor.CreateLocationInfo(),
+                        className));
+                }
             }
         }
 
@@ -121,12 +126,20 @@ internal static class EnumSyntaxProvider
         DetectDuplicateValues(classSymbol, context.SemanticModel, validMembers, diagnostics, className, cancellationToken);
 
         // OE0004: no valid members
+        // Abstract classes with no eligible members and no diagnostics are intermediate base
+        // classes — skip silently so they produce no output and no noise.
+        // If diagnostics were collected (e.g. OE0101, OE0102) we still surface them by falling
+        // through to the EnumInfo return; the generator skips code emission for empty member lists.
         if (validMembers.Count == 0)
         {
-            diagnostics.Add(new DiagnosticInfo(
-                DiagnosticDescriptors.NoMembersFound,
-                location,
-                className));
+            if (classSymbol.IsAbstract && diagnostics.Count == 0)
+                return null;
+
+            if (!classSymbol.IsAbstract)
+                diagnostics.Add(new DiagnosticInfo(
+                    DiagnosticDescriptors.NoMembersFound,
+                    location,
+                    className));
         }
 
         return new EnumInfo(

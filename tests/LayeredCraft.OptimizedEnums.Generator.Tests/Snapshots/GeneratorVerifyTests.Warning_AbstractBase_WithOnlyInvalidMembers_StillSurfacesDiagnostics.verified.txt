@@ -1,0 +1,18 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: Program.cs: (7,36)-(7,44),
+      Message: The field 'BadField' in class 'DomainEnum' is a public static field of the enum type but is not readonly,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: OE0102,
+        Title: OptimizedEnum static field should be readonly,
+        MessageFormat: The field '{0}' in class '{1}' is a public static field of the enum type but is not readonly,
+        Category: OptimizedEnums.Usage,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}
