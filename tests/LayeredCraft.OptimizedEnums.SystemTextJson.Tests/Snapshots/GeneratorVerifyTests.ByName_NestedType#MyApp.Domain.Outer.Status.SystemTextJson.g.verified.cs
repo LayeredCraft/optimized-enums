@@ -21,8 +21,6 @@ partial class Status { }
 internal sealed class StatusNameJsonConverter
     : global::System.Text.Json.Serialization.JsonConverter<global::MyApp.Domain.Outer.Status>
 {
-    public override bool HandleNull => true;
-
 
     public override global::MyApp.Domain.Outer.Status Read(
         ref global::System.Text.Json.Utf8JsonReader reader,

@@ -19,8 +19,6 @@ partial class OrderStatus { }
 internal sealed class OrderStatusNameJsonConverter
     : global::System.Text.Json.Serialization.JsonConverter<global::MyApp.Domain.OrderStatus>
 {
-    public override bool HandleNull => true;
-
 
     public override global::MyApp.Domain.OrderStatus Read(
         ref global::System.Text.Json.Utf8JsonReader reader,

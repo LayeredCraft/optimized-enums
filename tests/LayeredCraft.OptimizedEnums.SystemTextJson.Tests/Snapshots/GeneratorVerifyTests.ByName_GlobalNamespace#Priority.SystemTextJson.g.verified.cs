@@ -17,8 +17,6 @@ partial class Priority { }
 internal sealed class PriorityNameJsonConverter
     : global::System.Text.Json.Serialization.JsonConverter<global::Priority>
 {
-    public override bool HandleNull => true;
-
 
     public override global::Priority Read(
         ref global::System.Text.Json.Utf8JsonReader reader,
