@@ -32,10 +32,6 @@ internal static class EnumSyntaxProvider
         if (baseType is null)
             return null;
 
-        // Skip abstract classes — they are intermediate base classes, not concrete enums
-        if (classSymbol.IsAbstract)
-            return null;
-
         var diagnostics = new List<DiagnosticInfo>();
         var location = classDecl.CreateLocationInfo();
         var className = classSymbol.Name;
@@ -125,8 +121,14 @@ internal static class EnumSyntaxProvider
         DetectDuplicateValues(classSymbol, context.SemanticModel, validMembers, diagnostics, className, cancellationToken);
 
         // OE0004: no valid members
+        // Abstract classes with no eligible members are intermediate base classes — skip silently.
+        // Abstract classes that do declare members (e.g. via nested concrete implementations) are
+        // still valid enums and should generate normally.
         if (validMembers.Count == 0)
         {
+            if (classSymbol.IsAbstract)
+                return null;
+
             diagnostics.Add(new DiagnosticInfo(
                 DiagnosticDescriptors.NoMembersFound,
                 location,

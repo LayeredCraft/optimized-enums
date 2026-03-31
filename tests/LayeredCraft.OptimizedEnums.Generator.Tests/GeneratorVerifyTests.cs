@@ -325,9 +325,35 @@ public class GeneratorVerifyTests
 
         var result = driver.GetRunResult();
 
-        result.Diagnostics.Should().BeEmpty("abstract base class alone should produce no diagnostics");
-        result.GeneratedTrees.Length.Should().Be(0, "abstract base class alone should produce no generated output");
+        result.Diagnostics.Should().BeEmpty("abstract intermediate base class should produce no diagnostics");
+        result.GeneratedTrees.Length.Should().Be(0, "abstract intermediate base class should produce no generated output");
     }
+
+    [Fact]
+    public async Task AbstractEnum_WithMembers_StillGenerates() =>
+        await GeneratorTestHelpers.Verify(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public abstract partial class Status : OptimizedEnum<Status, int>
+                    {
+                        public static readonly Status Active   = null!;
+                        public static readonly Status Inactive = null!;
+
+                        protected Status(int value, string name) : base(value, name) { }
+                    }
+                    """,
+                DiagnosticsToSuppress = new Dictionary<string, ReportDiagnostic>
+                {
+                    ["OE0101"] = ReportDiagnostic.Suppress,
+                },
+                ExpectedTrees = 1,
+            },
+            TestContext.Current.CancellationToken);
 
     [Fact]
     public async Task Error_OE0005_DuplicateValue_IsEmitted() =>
