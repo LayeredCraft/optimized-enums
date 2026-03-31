@@ -19,32 +19,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Public dependency: consumers get the core package automatically -->
+    <!-- Public dependency: consumers get the core package (and its Microsoft.CSharp) automatically.
+         GetDependencyTargetPaths from the main generator flows Microsoft.CSharp.dll transitively,
+         so this project does not need its own direct Microsoft.CSharp reference. -->
     <ProjectReference
-      Include="..\LayeredCraft.OptimizedEnums.Generator\LayeredCraft.OptimizedEnums.Generator.csproj"
-      ReferenceOutputAssembly="false" />
+      Include="..\LayeredCraft.OptimizedEnums.Generator\LayeredCraft.OptimizedEnums.Generator.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Scriban" IncludeAssets="Build" />
-    <PackageReference Include="Microsoft.CSharp" PrivateAssets="all" GeneratePathProperty="true" />
-    <None
-      Include="$(PkgMicrosoft_CSharp)\lib\netstandard2.0\*.dll"
-      Pack="true"
-      PackagePath="analyzers/dotnet/cs"
-      Visible="false" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
-  </PropertyGroup>
-  <Target Name="GetDependencyTargetPaths">
-    <ItemGroup>
-      <TargetPathWithTargetPlatformMoniker
-        Include="$(PkgMicrosoft_CSharp)\lib\netstandard2.0\*.dll"
-        IncludeRuntimeDependency="false" />
-    </ItemGroup>
-  </Target>
 
   <!-- Embed Scriban templates as resources -->
   <ItemGroup>
