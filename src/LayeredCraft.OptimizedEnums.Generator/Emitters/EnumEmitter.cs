@@ -24,6 +24,7 @@ internal static class EnumEmitter
             info.FullyQualifiedClassName,
             info.ValueTypeFullyQualified,
             MemberNames = info.MemberNames.ToArray(),
+            IndexedProperties = info.IndexedProperties.ToArray(),
             Preamble = BuildPreamble(info),
             Suffix = BuildSuffix(info),
         };

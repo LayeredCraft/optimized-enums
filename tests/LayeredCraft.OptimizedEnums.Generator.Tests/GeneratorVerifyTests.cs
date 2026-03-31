@@ -394,4 +394,116 @@ public class GeneratorVerifyTests
                 ExpectedDiagnosticId = "OE0005",
             },
             TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task IndexedProperty_StringIndex_GeneratesLookupMethods() =>
+        await GeneratorTestHelpers.Verify(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public abstract partial class SlotEnumeration<TSelf> : OptimizedEnum<TSelf, int>
+                        where TSelf : SlotEnumeration<TSelf>
+                    {
+                        [OptimizedEnumIndex]
+                        public string SlotValue { get; }
+
+                        protected SlotEnumeration(int id, string name, string slotValue) : base(id, name)
+                        {
+                            SlotValue = slotValue;
+                        }
+                    }
+
+                    public sealed partial class ForceAlignment : SlotEnumeration<ForceAlignment>
+                    {
+                        public static readonly ForceAlignment Jedi = new(1, nameof(Jedi), "jedi");
+                        public static readonly ForceAlignment Sith = new(2, nameof(Sith), "sith");
+                        public static readonly ForceAlignment Gray = new(3, nameof(Gray), "gray");
+
+                        private ForceAlignment(int id, string name, string slotValue)
+                            : base(id, name, slotValue) { }
+                    }
+                    """,
+                ExpectedTrees = 1,
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task IndexedProperty_MultipleIndexes_GeneratesAllLookupMethods() =>
+        await GeneratorTestHelpers.Verify(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using System;
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public abstract partial class SlotEnumeration<TSelf> : OptimizedEnum<TSelf, int>
+                        where TSelf : SlotEnumeration<TSelf>
+                    {
+                        [OptimizedEnumIndex]
+                        public string SlotValue { get; }
+
+                        [OptimizedEnumIndex(StringComparison = StringComparison.OrdinalIgnoreCase)]
+                        public string ImageName { get; }
+
+                        protected SlotEnumeration(int id, string name, string slotValue, string imageName)
+                            : base(id, name)
+                        {
+                            SlotValue = slotValue;
+                            ImageName = imageName;
+                        }
+                    }
+
+                    public sealed partial class ForceAlignment : SlotEnumeration<ForceAlignment>
+                    {
+                        public static readonly ForceAlignment Jedi = new(1, nameof(Jedi), "jedi", "jedi.png");
+                        public static readonly ForceAlignment Sith = new(2, nameof(Sith), "sith", "sith.png");
+
+                        private ForceAlignment(int id, string name, string slotValue, string imageName)
+                            : base(id, name, slotValue, imageName) { }
+                    }
+                    """,
+                ExpectedTrees = 1,
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task Warning_OE0202_IndexProperty_NonEquatableType_IsEmitted() =>
+        await GeneratorTestHelpers.VerifyFailure(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public class NonEquatable { }
+
+                    public abstract partial class BaseEnum<TSelf> : OptimizedEnum<TSelf, int>
+                        where TSelf : BaseEnum<TSelf>
+                    {
+                        [OptimizedEnumIndex]
+                        public NonEquatable Tag { get; }
+
+                        protected BaseEnum(int id, string name, NonEquatable tag) : base(id, name)
+                        {
+                            Tag = tag;
+                        }
+                    }
+
+                    public sealed partial class Status : BaseEnum<Status>
+                    {
+                        public static readonly Status Active = new(1, nameof(Active), new NonEquatable());
+
+                        private Status(int id, string name, NonEquatable tag) : base(id, name, tag) { }
+                    }
+                    """,
+                ExpectedDiagnosticId = "OE0202",
+            },
+            TestContext.Current.CancellationToken);
 }

@@ -54,6 +54,14 @@ internal static class DiagnosticDescriptors
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
 
+    internal static readonly DiagnosticDescriptor IndexPropertyNotEquatable = new(
+        "OE0202",
+        "OptimizedEnumIndex property type does not implement IEquatable<T>",
+        "The property '{0}' of type '{1}' is marked [OptimizedEnumIndex] but its type does not implement IEquatable<T>; the generated dictionary will use reference equality, which is almost certainly incorrect. Implement IEquatable<T> on the property type or remove the attribute.",
+        UsageCategory,
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
     internal static readonly DiagnosticDescriptor GeneratorInternalError = new(
         "OE9001",
         "OptimizedEnum generator internal error",
