@@ -3,6 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
+    <DefineConstants>$(DefineConstants);SCRIBAN_NO_SYSTEM_TEXT_JSON</DefineConstants>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <IsPackable>true</IsPackable>
     <ImplicitUsings>true</ImplicitUsings>
