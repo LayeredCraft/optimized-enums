@@ -21,6 +21,7 @@
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.201" />
     <PackageVersion Include="Scriban" Version="7.0.6" />
+    <PackageVersion Include="System.Text.Json" Version="10.0.5" />
     <PackageVersion Include="Verify.SourceGenerators" Version="2.5.0" />
     <PackageVersion Include="Verify.XunitV3" Version="31.13.5" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />

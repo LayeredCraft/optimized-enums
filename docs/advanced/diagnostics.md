@@ -83,6 +83,47 @@ public OrderStatus(int value, string name) : base(value, name) { }
 #pragma warning restore OE0101
 ```
 
+## SystemTextJson Diagnostics
+
+The `LayeredCraft.OptimizedEnums.SystemTextJson` generator emits diagnostics with the `OE2xxx` prefix.
+
+### OE2001 — Not an OptimizedEnum
+
+**Message:** `The class '{0}' must inherit from OptimizedEnum<TEnum, TValue> to use [OptimizedEnumJsonConverter]`
+
+**Cause:** `[OptimizedEnumJsonConverter]` was applied to a class that does not inherit from `OptimizedEnum<TEnum, TValue>`.
+
+**Fix:** Remove the attribute, or make the class inherit from `OptimizedEnum<TEnum, TValue>`.
+
+### OE2002 — Must Be Partial
+
+**Message:** `The class '{0}' must be declared as partial for [OptimizedEnumJsonConverter] source generation`
+
+**Cause:** A class decorated with `[OptimizedEnumJsonConverter]` is missing the `partial` keyword. The generator cannot stamp the `[JsonConverter]` attribute onto the class.
+
+**Fix:**
+```csharp
+// Before
+[OptimizedEnumJsonConverter(OptimizedEnumJsonConverterType.ByName)]
+public sealed class OrderStatus : OptimizedEnum<OrderStatus, int> { ... }
+
+// After
+[OptimizedEnumJsonConverter(OptimizedEnumJsonConverterType.ByName)]
+public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int> { ... }
+```
+
+### OE2003 — Unknown Converter Type
+
+**Message:** `The class '{0}' specifies an unknown OptimizedEnumJsonConverterType value '{1}'; valid values are ByName (0) and ByValue (1)`
+
+**Cause:** An explicit integer cast was used to pass an undefined `OptimizedEnumJsonConverterType` value to `[OptimizedEnumJsonConverter]`.
+
+**Fix:** Use only the defined enum members:
+```csharp
+[OptimizedEnumJsonConverter(OptimizedEnumJsonConverterType.ByName)]   // or ByValue
+public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int> { ... }
+```
+
 ## Generator Not Running?
 
 If you add the package but see no generated members, check:

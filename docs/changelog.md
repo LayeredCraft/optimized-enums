@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## [Unreleased]
 
 ### Added
+- `LayeredCraft.OptimizedEnums.SystemTextJson` package — source-generated, zero-reflection `JsonConverter` support
+  - `[OptimizedEnumJsonConverter]` attribute with `ByName` and `ByValue` strategies
+  - Emits a concrete non-generic `JsonConverter<T>` for each decorated class — no runtime reflection, full AOT/NativeAOT compatibility
+  - Stamps `[JsonConverter(typeof(...))]` on a generated partial class stub — no manual `JsonSerializerOptions` registration required
+  - Declares `LayeredCraft.OptimizedEnums` as a NuGet dependency — only one package reference needed
+  - `OE2001` diagnostic for classes not inheriting `OptimizedEnum<TEnum, TValue>`
+  - `OE2002` diagnostic for classes missing `partial`
 - `OptimizedEnum<TEnum>` single-parameter base class for `int`-valued enums
 - Inheritance-based generation trigger — `[OptimizedEnum]` attribute no longer required
 - `Microsoft.CSharp.dll` bundled in `analyzers/dotnet/cs/` for Scriban dynamic dispatch

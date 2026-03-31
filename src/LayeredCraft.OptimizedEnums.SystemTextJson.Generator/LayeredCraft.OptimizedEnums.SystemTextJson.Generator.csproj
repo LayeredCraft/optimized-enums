@@ -1,0 +1,64 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <DefineConstants>$(DefineConstants);SCRIBAN_NO_SYSTEM_TEXT_JSON</DefineConstants>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IsPackable>true</IsPackable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <PackageScribanIncludeSource>true</PackageScribanIncludeSource>
+    <PackageId>LayeredCraft.OptimizedEnums.SystemTextJson</PackageId>
+    <AssemblyName>LayeredCraft.OptimizedEnums.SystemTextJson.Generator</AssemblyName>
+    <RootNamespace>LayeredCraft.OptimizedEnums.SystemTextJson.Generator</RootNamespace>
+    <Title>LayeredCraft.OptimizedEnums.SystemTextJson</Title>
+    <Description>System.Text.Json source-generated converters for LayeredCraft.OptimizedEnums. Decorate your OptimizedEnum class with [OptimizedEnumJsonConverter] to get a zero-reflection, AOT-safe JsonConverter stamped automatically.</Description>
+    <PackageTags>enum;source-generator;smart-enum;dotnet;csharp;system-text-json;json;aot</PackageTags>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Public dependency: consumers get the core package (and its Microsoft.CSharp) automatically.
+         GetDependencyTargetPaths from the main generator flows Microsoft.CSharp.dll transitively,
+         so this project does not need its own direct Microsoft.CSharp reference. -->
+    <ProjectReference
+      Include="..\LayeredCraft.OptimizedEnums.Generator\LayeredCraft.OptimizedEnums.Generator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Scriban" IncludeAssets="Build" />
+  </ItemGroup>
+
+  <!-- Embed Scriban templates as resources -->
+  <ItemGroup>
+    <Compile Remove="Templates\*.scriban" />
+    <EmbeddedResource Include="Templates\*.scriban" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Meziantou.Polyfill">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+    <!-- Public dependency: consumers need System.Text.Json for the generated code to compile -->
+    <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
+    <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
+  </ItemGroup>
+
+  <!-- Pack generator DLL into analyzers folder -->
+  <ItemGroup>
+    <None
+      Include="$(OutputPath)\LayeredCraft.OptimizedEnums.SystemTextJson.Generator.dll"
+      Pack="true"
+      PackagePath="analyzers/dotnet/cs"
+      Visible="false" />
+  </ItemGroup>
+</Project>

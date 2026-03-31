@@ -1,19 +1,23 @@
-name: Deploy Documentation
+name: Docs
 
 on:
   push:
     branches: [ main ]
     paths:
       - 'docs/**'
-      - 'mkdocs.yml'
+      - 'zensical.toml'
       - '.github/workflows/docs.yml'
+      - 'pyproject.toml'
+      - 'uv.lock'
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
     branches: [ main ]
-    types: [ opened, synchronize, reopened, ready_for_review ]
     paths:
       - 'docs/**'
-      - 'mkdocs.yml'
+      - 'zensical.toml'
       - '.github/workflows/docs.yml'
+      - 'pyproject.toml'
+      - 'uv.lock'
 
 permissions:
   contents: read
@@ -22,11 +26,12 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
-    if: github.event.pull_request.draft == false
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -34,34 +39,31 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install pngquant
+        run: sudo apt-get update && sudo apt-get install -y pngquant
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version-file: "pyproject.toml"
 
-      - name: Cache dependencies
-        uses: actions/cache@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
         with:
-          key: mkdocs-material-${{ hashFiles('requirements.txt') }}
-          path: ~/.cache/pip
-          restore-keys: |
-            mkdocs-material-
+          enable-cache: true
 
-      - name: Install dependencies
-        run: |
-          pip install mkdocs-material
-          pip install mkdocs-minify-plugin
+      - name: Install the project
+        run: uv sync --locked --all-extras --dev
 
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
 
       - name: Build documentation
-        run: |
-          mkdocs build --clean
+        run: uv run zensical build --clean
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: site
 

@@ -3,8 +3,7 @@
     <File Path="docs\changelog.md" />
     <File Path="docs\contributing.md" />
     <File Path="docs\index.md" />
-    <File Path="mkdocs.yml" />
-    <File Path="requirements.txt" />
+    <File Path="zensical.toml" />
   </Folder>
   <Folder Name="/docs/advanced/">
     <File Path="docs\advanced\aot-trimming.md" />
@@ -32,6 +31,7 @@
   </Folder>
   <Folder Name="/docs/usage/">
     <File Path="docs\usage\defining-enums.md" />
+    <File Path="docs\usage\json-serialization.md" />
     <File Path="docs\usage\lookups.md" />
     <File Path="docs\usage\string-values.md" />
   </Folder>
@@ -46,15 +46,19 @@
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
     <File Path="global.json" />
+    <File Path="pyproject.toml" />
+    <File Path="uv.lock" />
     <File Path="README.md" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/LayeredCraft.OptimizedEnums/LayeredCraft.OptimizedEnums.csproj" />
     <Project Path="src/LayeredCraft.OptimizedEnums.Generator/LayeredCraft.OptimizedEnums.Generator.csproj" />
+    <Project Path="src/LayeredCraft.OptimizedEnums.SystemTextJson.Generator/LayeredCraft.OptimizedEnums.SystemTextJson.Generator.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/LayeredCraft.OptimizedEnums.Tests/LayeredCraft.OptimizedEnums.Tests.csproj" />
     <Project Path="tests/LayeredCraft.OptimizedEnums.Generator.Tests/LayeredCraft.OptimizedEnums.Generator.Tests.csproj" />
+    <Project Path="tests/LayeredCraft.OptimizedEnums.SystemTextJson.Tests/LayeredCraft.OptimizedEnums.SystemTextJson.Tests.csproj" />
     <Project Path="tests/LayeredCraft.OptimizedEnums.Benchmarks/LayeredCraft.OptimizedEnums.Benchmarks.csproj" />
   </Folder>
 </Solution>

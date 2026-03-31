@@ -1,0 +1,30 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: Program.cs: (5,0)-(11,1),
+      Message: The class 'OrderStatus' must be declared as partial for OptimizedEnum source generation,
+      Severity: Error,
+      Descriptor: {
+        Id: OE0001,
+        Title: OptimizedEnum class must be partial,
+        MessageFormat: The class '{0}' must be declared as partial for OptimizedEnum source generation,
+        Category: OptimizedEnums.Usage,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: Program.cs: (5,0)-(11,1),
+      Message: The class 'OrderStatus' must be declared as partial for [OptimizedEnumJsonConverter] source generation,
+      Severity: Error,
+      Descriptor: {
+        Id: OE2002,
+        Title: OptimizedEnum class must be partial for JSON converter generation,
+        MessageFormat: The class '{0}' must be declared as partial for [OptimizedEnumJsonConverter] source generation,
+        Category: OptimizedEnums.SystemTextJson,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}
