@@ -47,12 +47,23 @@ internal sealed class {{ converter_class_name }}
         global::System.Type typeToConvert,
         global::System.Text.Json.JsonSerializerOptions options)
     {
+{{ if value_type_is_reference_type }}
+        if (reader.TokenType == global::System.Text.Json.JsonTokenType.Null)
+            throw new global::System.Text.Json.JsonException(
+                $"Expected a non-null JSON value for {{ class_name }}.");
+
+        var value = global::System.Text.Json.JsonSerializer.Deserialize<{{ value_type_fully_qualified }}>(ref reader, options);
+
+        if (value is null || !{{ fully_qualified_class_name }}.TryFromValue(value, out var result))
+            throw new global::System.Text.Json.JsonException(
+                $"'{value}' is not a valid value for {{ class_name }}.");
+{{ else }}
         var value = global::System.Text.Json.JsonSerializer.Deserialize<{{ value_type_fully_qualified }}>(ref reader, options);
 
         if (!{{ fully_qualified_class_name }}.TryFromValue(value, out var result))
             throw new global::System.Text.Json.JsonException(
                 $"'{value}' is not a valid value for {{ class_name }}.");
-
+{{ end }}
         return result!;
     }
 

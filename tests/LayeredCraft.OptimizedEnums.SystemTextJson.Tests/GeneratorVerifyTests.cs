@@ -126,6 +126,33 @@ public class GeneratorVerifyTests
             TestContext.Current.CancellationToken);
 
     [Fact]
+    public async Task ByName_NestedType() =>
+        await GeneratorTestHelpers.Verify(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+                    using LayeredCraft.OptimizedEnums.SystemTextJson;
+
+                    namespace MyApp.Domain;
+
+                    public partial class Outer
+                    {
+                        [OptimizedEnumJsonConverter(OptimizedEnumJsonConverterType.ByName)]
+                        public sealed partial class Status : OptimizedEnum<Status, int>
+                        {
+                            public static readonly Status Active   = new(1, nameof(Active));
+                            public static readonly Status Inactive = new(2, nameof(Inactive));
+
+                            private Status(int value, string name) : base(value, name) { }
+                        }
+                    }
+                    """,
+                ExpectedTrees = 3,
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
     public async Task Error_NotOptimizedEnum() =>
         await GeneratorTestHelpers.VerifyFailure(
             new VerifyTestOptions

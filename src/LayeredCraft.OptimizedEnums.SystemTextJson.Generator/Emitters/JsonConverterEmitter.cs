@@ -28,6 +28,7 @@ internal static class JsonConverterEmitter
             info.ClassName,
             info.FullyQualifiedClassName,
             info.ValueTypeFullyQualified,
+            info.ValueTypeIsReferenceType,
             IsByName = info.ConverterType == OptimizedEnumJsonConverterType.ByName,
             Preamble = BuildPreamble(info),
             Suffix = BuildSuffix(info),

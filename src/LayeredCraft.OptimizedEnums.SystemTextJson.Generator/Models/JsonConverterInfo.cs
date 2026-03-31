@@ -7,6 +7,7 @@ internal sealed record JsonConverterInfo(
     string ClassName,
     string FullyQualifiedClassName,
     string ValueTypeFullyQualified,
+    bool ValueTypeIsReferenceType,
     EquatableArray<string> ContainingTypeNames,
     OptimizedEnumJsonConverterType ConverterType,
     EquatableArray<DiagnosticInfo> Diagnostics,
@@ -21,11 +22,12 @@ internal sealed record JsonConverterInfo(
         && ClassName == other.ClassName
         && FullyQualifiedClassName == other.FullyQualifiedClassName
         && ValueTypeFullyQualified == other.ValueTypeFullyQualified
+        && ValueTypeIsReferenceType == other.ValueTypeIsReferenceType
         && ContainingTypeNames == other.ContainingTypeNames
         && ConverterType == other.ConverterType
         && Diagnostics == other.Diagnostics;
 
     public override int GetHashCode() =>
         HashCode.Combine(Namespace, ClassName, FullyQualifiedClassName, ValueTypeFullyQualified,
-            ContainingTypeNames, ConverterType, Diagnostics);
+            ValueTypeIsReferenceType, ContainingTypeNames, ConverterType, Diagnostics);
 }
