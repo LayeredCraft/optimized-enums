@@ -262,6 +262,74 @@ public class GeneratorVerifyTests
             TestContext.Current.CancellationToken);
 
     [Fact]
+    public async Task AbstractBase_WithCRTP() =>
+        await GeneratorTestHelpers.Verify(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public abstract partial class DomainEnum<TSelf> : OptimizedEnum<TSelf, int>
+                        where TSelf : DomainEnum<TSelf>
+                    {
+                        public string Description { get; }
+
+                        protected DomainEnum(int value, string name, string description)
+                            : base(value, name)
+                        {
+                            Description = description;
+                        }
+                    }
+
+                    public sealed partial class OrderStatus : DomainEnum<OrderStatus>
+                    {
+                        public static readonly OrderStatus Pending = new(1, nameof(Pending), "Order is pending");
+                        public static readonly OrderStatus Paid    = new(2, nameof(Paid),    "Payment received");
+
+                        private OrderStatus(int value, string name, string description)
+                            : base(value, name, description) { }
+                    }
+                    """,
+                ExpectedTrees = 1,
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task AbstractBase_Alone_ProducesNoOutput()
+    {
+        var options = new VerifyTestOptions
+        {
+            SourceCode = """
+                using LayeredCraft.OptimizedEnums;
+
+                namespace MyApp.Domain;
+
+                public abstract partial class DomainEnum<TSelf> : OptimizedEnum<TSelf, int>
+                    where TSelf : DomainEnum<TSelf>
+                {
+                    public string Description { get; }
+
+                    protected DomainEnum(int value, string name, string description)
+                        : base(value, name)
+                    {
+                        Description = description;
+                    }
+                }
+                """,
+            ExpectedTrees = 0,
+        };
+
+        var (driver, _) = GeneratorTestHelpers.GenerateFromSource(options, TestContext.Current.CancellationToken);
+
+        var result = driver.GetRunResult();
+
+        result.Diagnostics.Should().BeEmpty("abstract base class alone should produce no diagnostics");
+        result.GeneratedTrees.Length.Should().Be(0, "abstract base class alone should produce no generated output");
+    }
+
+    [Fact]
     public async Task Error_OE0005_DuplicateValue_IsEmitted() =>
         await GeneratorTestHelpers.VerifyFailure(
             new VerifyTestOptions

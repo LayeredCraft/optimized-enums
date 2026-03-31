@@ -32,6 +32,10 @@ internal static class EnumSyntaxProvider
         if (baseType is null)
             return null;
 
+        // Skip abstract classes — they are intermediate base classes, not concrete enums
+        if (classSymbol.IsAbstract)
+            return null;
+
         var diagnostics = new List<DiagnosticInfo>();
         var location = classDecl.CreateLocationInfo();
         var className = classSymbol.Name;
