@@ -80,8 +80,35 @@ public sealed partial class Color : OptimizedEnum<Color, string>
 }
 ```
 
+## 6. JSON Serialization
+
+To serialize/deserialize your enum with `System.Text.Json`, install the SystemTextJson package (it pulls in the core package automatically):
+
+```bash
+dotnet add package LayeredCraft.OptimizedEnums.SystemTextJson
+```
+
+Then decorate your class with `[OptimizedEnumJsonConverter]`:
+
+```csharp
+using LayeredCraft.OptimizedEnums.SystemTextJson;
+
+[OptimizedEnumJsonConverter(OptimizedEnumJsonConverterType.ByName)]
+public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int>
+{
+    public static readonly OrderStatus Pending = new(1, nameof(Pending));
+    public static readonly OrderStatus Paid    = new(2, nameof(Paid));
+    public static readonly OrderStatus Shipped = new(3, nameof(Shipped));
+
+    private OrderStatus(int value, string name) : base(value, name) { }
+}
+```
+
+`OrderStatus` now serializes as `"Pending"` / `"Paid"` / `"Shipped"` with no manual converter registration. See [JSON Serialization](../usage/json-serialization.md) for full details on `ByName` vs `ByValue` and AOT safety.
+
 ## Next Steps
 
 - [Core Concepts — How It Works](../core-concepts/how-it-works.md)
 - [Usage — Defining Enums](../usage/defining-enums.md)
+- [Usage — JSON Serialization](../usage/json-serialization.md)
 - [API Reference — Generated Members](../api-reference/generated-members.md)

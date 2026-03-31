@@ -36,6 +36,30 @@ The package bundles two assemblies:
 
 Both are delivered automatically by the single NuGet package. No separate runtime package reference is needed.
 
+## Optional: JSON Serialization
+
+To add source-generated `System.Text.Json` converter support, install the SystemTextJson package. It declares the core package as a dependency, so only one `dotnet add` is needed:
+
+=== ".NET CLI"
+
+    ```bash
+    dotnet add package LayeredCraft.OptimizedEnums.SystemTextJson
+    ```
+
+=== "Package Manager"
+
+    ```powershell
+    Install-Package LayeredCraft.OptimizedEnums.SystemTextJson
+    ```
+
+=== "PackageReference"
+
+    ```xml
+    <PackageReference Include="LayeredCraft.OptimizedEnums.SystemTextJson" Version="x.x.x" />
+    ```
+
+See [JSON Serialization](../usage/json-serialization.md) for usage details.
+
 ## Verifying the Installation
 
 After adding the package, define a type that inherits from `OptimizedEnum<TEnum, TValue>` and declare it `partial`. Build the project — the generator runs during compilation and produces the lookup members. You can inspect the generated output under `obj/` or via your IDE's "Go to definition" on any generated method.

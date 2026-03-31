@@ -16,7 +16,7 @@
 | Package | NuGet | Downloads |
 |---------|-------|-----------|
 | **LayeredCraft.OptimizedEnums** | [![NuGet](https://img.shields.io/nuget/v/LayeredCraft.OptimizedEnums.svg)](https://www.nuget.org/packages/LayeredCraft.OptimizedEnums) | [![Downloads](https://img.shields.io/nuget/dt/LayeredCraft.OptimizedEnums.svg)](https://www.nuget.org/packages/LayeredCraft.OptimizedEnums/) |
-| **LayeredCraft.OptimizedEnums.SystemTextJson** | _coming soon_ | |
+| **LayeredCraft.OptimizedEnums.SystemTextJson** | [![NuGet](https://img.shields.io/nuget/v/LayeredCraft.OptimizedEnums.SystemTextJson.svg)](https://www.nuget.org/packages/LayeredCraft.OptimizedEnums.SystemTextJson) | [![Downloads](https://img.shields.io/nuget/dt/LayeredCraft.OptimizedEnums.SystemTextJson.svg)](https://www.nuget.org/packages/LayeredCraft.OptimizedEnums.SystemTextJson/) |
 | **LayeredCraft.OptimizedEnums.EFCore** | _coming soon_ | |
 | **LayeredCraft.OptimizedEnums.Dapper** | _coming soon_ | |
 | **LayeredCraft.OptimizedEnums.AutoFixture** | _coming soon_ | |
@@ -87,6 +87,37 @@ Benchmarks run on Apple M3 Max, .NET 9.0.8, BenchmarkDotNet v0.14.0.
 | GetCount      | ~0 ns    | 0 B       |
 
 All lookups are O(1) via statically-cached dictionaries. `Count` is a compile-time constant.
+
+## JSON Serialization
+
+Add `LayeredCraft.OptimizedEnums.SystemTextJson` for source-generated, zero-reflection `JsonConverter` support. One package is all you need — it pulls in the core package automatically:
+
+```bash
+dotnet add package LayeredCraft.OptimizedEnums.SystemTextJson
+```
+
+Decorate your class with `[OptimizedEnumJsonConverter]` and the generator emits a concrete, AOT-safe converter and wires it up via `[JsonConverter]`:
+
+```csharp
+using LayeredCraft.OptimizedEnums;
+using LayeredCraft.OptimizedEnums.SystemTextJson;
+
+[OptimizedEnumJsonConverter(OptimizedEnumJsonConverterType.ByName)]
+public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int>
+{
+    public static readonly OrderStatus Pending = new(1, nameof(Pending));
+    public static readonly OrderStatus Paid    = new(2, nameof(Paid));
+    public static readonly OrderStatus Shipped = new(3, nameof(Shipped));
+
+    private OrderStatus(int value, string name) : base(value, name) { }
+}
+```
+
+```json
+{ "status": "Pending" }
+```
+
+Two strategies are available: `ByName` (serializes as the member name string) and `ByValue` (serializes as the underlying value). See the [JSON Serialization docs](https://layeredcraft.github.io/optimized-enums/usage/json-serialization/) for full details.
 
 ## Installation
 

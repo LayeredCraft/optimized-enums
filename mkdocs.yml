@@ -112,6 +112,7 @@ nav:
     - Defining Enums: usage/defining-enums.md
     - Lookups & Queries: usage/lookups.md
     - String Values: usage/string-values.md
+    - JSON Serialization: usage/json-serialization.md
   - Advanced:
     - Performance: advanced/performance.md
     - Diagnostics: advanced/diagnostics.md
