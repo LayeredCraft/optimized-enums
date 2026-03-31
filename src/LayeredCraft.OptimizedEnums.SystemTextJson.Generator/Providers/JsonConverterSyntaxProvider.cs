@@ -79,7 +79,30 @@ internal static class JsonConverterSyntaxProvider
         // Read ConverterType from the attribute constructor argument
         var converterType = OptimizedEnumJsonConverterType.ByName;
         if (attr.ConstructorArguments.Length > 0 && attr.ConstructorArguments[0].Value is int rawValue)
+        {
+            if (rawValue != (int)OptimizedEnumJsonConverterType.ByName &&
+                rawValue != (int)OptimizedEnumJsonConverterType.ByValue)
+            {
+                diagnostics.Add(new DiagnosticInfo(
+                    DiagnosticDescriptors.UnknownConverterType,
+                    location,
+                    className,
+                    rawValue));
+
+                return new JsonConverterInfo(
+                    Namespace: null,
+                    ClassName: className,
+                    FullyQualifiedClassName: classSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                    ValueTypeFullyQualified: string.Empty,
+                    ValueTypeIsReferenceType: false,
+                    ContainingTypeNames: EquatableArray<string>.Empty,
+                    ConverterType: OptimizedEnumJsonConverterType.ByName,
+                    Diagnostics: diagnostics.ToEquatableArray(),
+                    Location: location);
+            }
+
             converterType = (OptimizedEnumJsonConverterType)rawValue;
+        }
 
         var valueTypeSymbol = baseType.TypeArguments[1];
 

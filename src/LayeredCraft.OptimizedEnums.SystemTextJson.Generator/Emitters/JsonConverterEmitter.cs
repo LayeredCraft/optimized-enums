@@ -42,13 +42,7 @@ internal static class JsonConverterEmitter
         catch (Exception ex)
         {
             context.ReportDiagnostic(Diagnostic.Create(
-                new DiagnosticDescriptor(
-                    "OE9002",
-                    "OptimizedEnums SystemTextJson generator internal error",
-                    "An unexpected error occurred while generating the JSON converter for '{0}': {1}",
-                    "OptimizedEnums.SystemTextJson",
-                    DiagnosticSeverity.Error,
-                    isEnabledByDefault: true),
+                DiagnosticDescriptors.GeneratorInternalError,
                 info.Location?.ToLocation(),
                 info.ClassName,
                 ex.Message));

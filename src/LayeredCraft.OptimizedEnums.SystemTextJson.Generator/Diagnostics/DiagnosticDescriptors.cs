@@ -21,4 +21,20 @@ internal static class DiagnosticDescriptors
         Category,
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
+
+    internal static readonly DiagnosticDescriptor UnknownConverterType = new(
+        "OE2003",
+        "Unknown OptimizedEnumJsonConverterType value",
+        "The class '{0}' specifies an unknown OptimizedEnumJsonConverterType value '{1}'; valid values are ByName (0) and ByValue (1)",
+        Category,
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
+    internal static readonly DiagnosticDescriptor GeneratorInternalError = new(
+        "OE9002",
+        "OptimizedEnums SystemTextJson generator internal error",
+        "An unexpected error occurred while generating the JSON converter for '{0}': {1}",
+        Category,
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
 }

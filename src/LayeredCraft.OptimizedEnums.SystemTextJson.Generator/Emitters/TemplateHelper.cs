@@ -26,7 +26,7 @@ internal static class TemplateHelper
 
         var manifestTemplateName = assembly
             .GetManifestResourceNames()
-            .FirstOrDefault(x => x.EndsWith(templateName, StringComparison.InvariantCulture));
+            .FirstOrDefault(x => x.EndsWith(templateName, StringComparison.Ordinal));
 
         if (string.IsNullOrEmpty(manifestTemplateName))
         {

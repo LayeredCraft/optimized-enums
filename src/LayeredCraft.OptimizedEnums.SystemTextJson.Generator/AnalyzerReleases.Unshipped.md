@@ -7,3 +7,5 @@
 ---------|---------------------------------|----------|-----------------------
  OE2001  | OptimizedEnums.SystemTextJson   | Error    | DiagnosticDescriptors
  OE2002  | OptimizedEnums.SystemTextJson   | Error    | DiagnosticDescriptors
+ OE2003  | OptimizedEnums.SystemTextJson   | Error    | DiagnosticDescriptors
+ OE9002  | OptimizedEnums.SystemTextJson   | Error    | DiagnosticDescriptors

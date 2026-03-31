@@ -112,6 +112,18 @@ public sealed class OrderStatus : OptimizedEnum<OrderStatus, int> { ... }
 public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int> { ... }
 ```
 
+### OE2003 — Unknown Converter Type
+
+**Message:** `The class '{0}' specifies an unknown OptimizedEnumJsonConverterType value '{1}'; valid values are ByName (0) and ByValue (1)`
+
+**Cause:** An explicit integer cast was used to pass an undefined `OptimizedEnumJsonConverterType` value to `[OptimizedEnumJsonConverter]`.
+
+**Fix:** Use only the defined enum members:
+```csharp
+[OptimizedEnumJsonConverter(OptimizedEnumJsonConverterType.ByName)]   // or ByValue
+public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int> { ... }
+```
+
 ## Generator Not Running?
 
 If you add the package but see no generated members, check:

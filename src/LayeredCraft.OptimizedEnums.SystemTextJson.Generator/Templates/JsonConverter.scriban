@@ -17,6 +17,8 @@ partial class {{ class_name }} { }
 internal sealed class {{ converter_class_name }}
     : global::System.Text.Json.Serialization.JsonConverter<{{ fully_qualified_class_name }}>
 {
+    public override bool HandleNull => true;
+
 {{ if is_by_name }}
     public override {{ fully_qualified_class_name }} Read(
         ref global::System.Text.Json.Utf8JsonReader reader,
