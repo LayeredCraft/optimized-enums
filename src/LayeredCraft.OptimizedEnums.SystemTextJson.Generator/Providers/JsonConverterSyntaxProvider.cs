@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using LayeredCraft.OptimizedEnums.SystemTextJson.Generator.Diagnostics;
 using LayeredCraft.OptimizedEnums.SystemTextJson.Generator.Models;
 using Microsoft.CodeAnalysis;
@@ -9,38 +8,28 @@ namespace LayeredCraft.OptimizedEnums.SystemTextJson.Generator.Providers;
 
 internal static class JsonConverterSyntaxProvider
 {
-    private const string AttributeMetadataName =
+    internal const string AttributeMetadataName =
         "LayeredCraft.OptimizedEnums.SystemTextJson.OptimizedEnumJsonConverterAttribute";
 
     private const string OptimizedEnumBaseMetadataName =
         "LayeredCraft.OptimizedEnums.OptimizedEnum`2";
 
     internal static bool Predicate(SyntaxNode node, CancellationToken _) =>
-        node is ClassDeclarationSyntax { AttributeLists.Count: > 0 };
+        node is ClassDeclarationSyntax;
 
     internal static JsonConverterInfo? Transform(
-        GeneratorSyntaxContext context,
+        GeneratorAttributeSyntaxContext context,
         CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (context.Node is not ClassDeclarationSyntax classDecl)
+        if (context.TargetNode is not ClassDeclarationSyntax classDecl)
             return null;
 
-        if (context.SemanticModel.GetDeclaredSymbol(classDecl, cancellationToken)
-            is not { } classSymbol)
+        if (context.TargetSymbol is not INamedTypeSymbol classSymbol)
             return null;
 
-        // Only process classes with [OptimizedEnumJsonConverter]
-        var attributeType = context.SemanticModel.Compilation
-            .GetTypeByMetadataName(AttributeMetadataName);
-        if (attributeType is null)
-            return null;
-
-        var attr = classSymbol.GetAttributes()
-            .FirstOrDefault(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, attributeType));
-        if (attr is null)
-            return null;
+        var attr = context.Attributes[0];
 
         var diagnostics = new List<DiagnosticInfo>();
         var location = classDecl.CreateLocationInfo();
@@ -60,6 +49,7 @@ internal static class JsonConverterSyntaxProvider
                 ClassName: className,
                 FullyQualifiedClassName: classSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                 ValueTypeFullyQualified: string.Empty,
+                ValueTypeIsReferenceType: false,
                 ContainingTypeNames: EquatableArray<string>.Empty,
                 ConverterType: OptimizedEnumJsonConverterType.ByName,
                 Diagnostics: diagnostics.ToEquatableArray(),
@@ -79,6 +69,7 @@ internal static class JsonConverterSyntaxProvider
                 ClassName: className,
                 FullyQualifiedClassName: classSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                 ValueTypeFullyQualified: string.Empty,
+                ValueTypeIsReferenceType: false,
                 ContainingTypeNames: EquatableArray<string>.Empty,
                 ConverterType: OptimizedEnumJsonConverterType.ByName,
                 Diagnostics: diagnostics.ToEquatableArray(),
@@ -97,6 +88,7 @@ internal static class JsonConverterSyntaxProvider
             ClassName: className,
             FullyQualifiedClassName: classSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
             ValueTypeFullyQualified: valueTypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+            ValueTypeIsReferenceType: valueTypeSymbol.IsReferenceType,
             ContainingTypeNames: GetContainingTypeDeclarations(classSymbol),
             ConverterType: converterType,
             Diagnostics: diagnostics.ToEquatableArray(),

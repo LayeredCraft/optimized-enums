@@ -89,7 +89,7 @@ The `LayeredCraft.OptimizedEnums.SystemTextJson` generator emits diagnostics wit
 
 ### OE2001 — Not an OptimizedEnum
 
-**Message:** `'{0}' does not inherit from OptimizedEnum<TEnum, TValue> and cannot have a JSON converter generated`
+**Message:** `The class '{0}' must inherit from OptimizedEnum<TEnum, TValue> to use [OptimizedEnumJsonConverter]`
 
 **Cause:** `[OptimizedEnumJsonConverter]` was applied to a class that does not inherit from `OptimizedEnum<TEnum, TValue>`.
 
@@ -97,7 +97,7 @@ The `LayeredCraft.OptimizedEnums.SystemTextJson` generator emits diagnostics wit
 
 ### OE2002 — Must Be Partial
 
-**Message:** `The class '{0}' must be declared as partial for OptimizedEnumJsonConverter source generation`
+**Message:** `The class '{0}' must be declared as partial for [OptimizedEnumJsonConverter] source generation`
 
 **Cause:** A class decorated with `[OptimizedEnumJsonConverter]` is missing the `partial` keyword. The generator cannot stamp the `[JsonConverter]` attribute onto the class.
 

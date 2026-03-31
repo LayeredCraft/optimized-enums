@@ -16,7 +16,8 @@ public sealed class OptimizedEnumJsonConverterGenerator : IIncrementalGenerator
             ctx.AddSource(AttributeSource.HintName, AttributeSource.Source));
 
         var converterInfos = context.SyntaxProvider
-            .CreateSyntaxProvider(
+            .ForAttributeWithMetadataName(
+                JsonConverterSyntaxProvider.AttributeMetadataName,
                 JsonConverterSyntaxProvider.Predicate,
                 JsonConverterSyntaxProvider.Transform)
             .WithTrackingName(TrackingNames.JsonConverterSyntaxProvider_Extract)

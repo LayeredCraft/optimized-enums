@@ -145,14 +145,16 @@ With `ByValue`, the JSON value is `"red"`/`"green"`/`"blue"`. With `ByName`, it 
 
 ## AOT and Trimming Safety
 
-Because the generator emits a concrete, non-generic converter for each type, there is no runtime reflection anywhere in the deserialization path:
+Because the generator emits a concrete, non-generic converter for each type, the **converter logic itself** is entirely reflection-free:
 
-- No `Activator.CreateInstance`
-- No `MakeGenericType`
+- No `MakeGenericType` — the converter type has `TEnum` baked in at generation time
 - No `Delegate.CreateDelegate`
-- `[JsonConverter]` is stamped on the partial class at compile time, so STJ's source-gen pipeline sees it
+- `TryFromName` / `TryFromValue` are themselves source-generated static dictionary lookups
 
-The generated converter calls `TryFromName` / `TryFromValue` directly — methods that are themselves source-generated static dictionary lookups.
+`[JsonConverter(typeof(...))]` is stamped on the partial class at compile time, so STJ's own source-generation pipeline (`JsonSerializerContext`) can see and wire up the converter without reflection.
+
+!!! note "Converter instantiation"
+    When using `JsonSerializer` without a `JsonSerializerContext`, STJ instantiates the converter class via `Activator.CreateInstance` at startup (once, then caches it). This is standard STJ behaviour and is not specific to this package. To eliminate that last reflection call in NativeAOT scenarios, use a `JsonSerializerContext` — STJ's source gen will hard-wire the converter creation directly.
 
 ## Diagnostics
 
