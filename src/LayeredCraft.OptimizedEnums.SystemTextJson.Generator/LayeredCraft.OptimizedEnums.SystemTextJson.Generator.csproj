@@ -19,6 +19,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Public dependency: consumers get the core package automatically -->
+    <ProjectReference
+      Include="..\LayeredCraft.OptimizedEnums.Generator\LayeredCraft.OptimizedEnums.Generator.csproj"
+      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Scriban" IncludeAssets="Build" />
     <PackageReference Include="Microsoft.CSharp" PrivateAssets="all" GeneratePathProperty="true" />
     <None
