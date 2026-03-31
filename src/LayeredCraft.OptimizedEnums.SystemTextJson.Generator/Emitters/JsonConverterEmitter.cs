@@ -7,7 +7,7 @@ namespace LayeredCraft.OptimizedEnums.SystemTextJson.Generator.Emitters;
 
 internal static class JsonConverterEmitter
 {
-    private static readonly string GeneratedCodeAttribute = BuildGeneratedCodeAttribute();
+    private static string GeneratedCodeAttribute { get; } = BuildGeneratedCodeAttribute();
 
     private static string BuildGeneratedCodeAttribute()
     {
