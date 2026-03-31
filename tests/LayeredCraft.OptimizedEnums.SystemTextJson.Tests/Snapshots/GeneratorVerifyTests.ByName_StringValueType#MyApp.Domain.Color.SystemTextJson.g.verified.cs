@@ -19,6 +19,8 @@ partial class Color { }
 internal sealed class ColorNameJsonConverter
     : global::System.Text.Json.Serialization.JsonConverter<global::MyApp.Domain.Color>
 {
+    public override bool HandleNull => true;
+
 
     public override global::MyApp.Domain.Color Read(
         ref global::System.Text.Json.Utf8JsonReader reader,
