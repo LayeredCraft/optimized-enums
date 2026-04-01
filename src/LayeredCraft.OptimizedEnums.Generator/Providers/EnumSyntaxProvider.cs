@@ -35,6 +35,10 @@ internal static class EnumSyntaxProvider
         var diagnostics = new List<DiagnosticInfo>();
         var location = classDecl.CreateLocationInfo();
         var className = classSymbol.Name;
+        var compilation = context.SemanticModel.Compilation;
+
+        var hasNotNullWhen = compilation.GetTypeByMetadataName(
+            "System.Diagnostics.CodeAnalysis.NotNullWhenAttribute") is not null;
 
         // OE0001: Must be partial
         var isPartial = classDecl.Modifiers.Any(static m => m.IsKind(SyntaxKind.PartialKeyword));
@@ -54,7 +58,8 @@ internal static class EnumSyntaxProvider
                 ContainingTypeNames: EquatableArray<string>.Empty,
                 Diagnostics: diagnostics.ToEquatableArray(),
                 IndexedProperties: EquatableArray<IndexedPropertyInfo>.Empty,
-                Location: location);
+                Location: location,
+                HasNotNullWhenAttribute: hasNotNullWhen);
         }
 
         // Extract TValue (second type argument of OptimizedEnum<TEnum, TValue>)
@@ -155,7 +160,8 @@ internal static class EnumSyntaxProvider
             ContainingTypeNames: GetContainingTypeDeclarations(classSymbol),
             Diagnostics: diagnostics.ToEquatableArray(),
             IndexedProperties: indexedProperties,
-            Location: location);
+            Location: location,
+            HasNotNullWhenAttribute: hasNotNullWhen);
     }
 
     private static INamedTypeSymbol? FindOptimizedEnumBase(
@@ -280,7 +286,7 @@ internal static class EnumSyntaxProvider
                 var attr = member.GetAttributes()
                     .FirstOrDefault(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, attrSymbol));
 
-                if (attr is null || !seenNames.Add(member.Name))
+                if (attr is null)
                     continue;
 
                 // OE0203: property must be a non-static, accessible instance property with a readable getter
@@ -333,6 +339,11 @@ internal static class EnumSyntaxProvider
                         continue;
                     }
                 }
+
+                // Only mark name as seen after it has passed all validation checks, so that an
+                // invalid nearer-base property does not shadow a valid one higher in the chain.
+                if (!seenNames.Add(member.Name))
+                    continue;
 
                 var isString = propType.SpecialType == SpecialType.System_String;
                 var comparerExpr = string.Empty;

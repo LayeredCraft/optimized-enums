@@ -27,6 +27,7 @@ internal static class EnumEmitter
             IndexedProperties = info.IndexedProperties.ToArray(),
             Preamble = BuildPreamble(info),
             Suffix = BuildSuffix(info),
+            info.HasNotNullWhenAttribute,
         };
 
         // Use the fully-qualified name (minus "global::") as the hint name to avoid

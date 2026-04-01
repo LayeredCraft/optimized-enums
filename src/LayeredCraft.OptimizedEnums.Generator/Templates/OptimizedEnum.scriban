@@ -86,7 +86,7 @@ partial class {{ class_name }}
     }
 
     {{ generated_code_attribute }}
-    public static bool TryFromName(string name, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out {{ fully_qualified_class_name }}? result) =>
+    public static bool TryFromName(string name, {{ if has_not_null_when_attribute }}[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] {{ end }}out {{ fully_qualified_class_name }}? result) =>
         s_byName.TryGetValue(name, out result);
 
     {{ generated_code_attribute }}
@@ -100,7 +100,7 @@ partial class {{ class_name }}
     }
 
     {{ generated_code_attribute }}
-    public static bool TryFromValue({{ value_type_fully_qualified }} value, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out {{ fully_qualified_class_name }}? result) =>
+    public static bool TryFromValue({{ value_type_fully_qualified }} value, {{ if has_not_null_when_attribute }}[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] {{ end }}out {{ fully_qualified_class_name }}? result) =>
         s_byValue.TryGetValue(value, out result);
 
     {{ generated_code_attribute }}
@@ -121,7 +121,7 @@ partial class {{ class_name }}
     }
 
     {{ generated_code_attribute }}
-    public static bool TryFrom{{ prop.property_name }}({{ prop.property_type_fully_qualified }} value, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out {{ fully_qualified_class_name }}? result) =>
+    public static bool TryFrom{{ prop.property_name }}({{ prop.property_type_fully_qualified }} value, {{ if has_not_null_when_attribute }}[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] {{ end }}out {{ fully_qualified_class_name }}? result) =>
         s_by{{ prop.property_name }}.TryGetValue(value, out result);
 {{~ end ~}}
 }{{ suffix }}
