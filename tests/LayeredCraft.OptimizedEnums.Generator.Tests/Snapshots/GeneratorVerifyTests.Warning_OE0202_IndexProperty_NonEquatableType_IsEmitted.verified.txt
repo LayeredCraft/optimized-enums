@@ -1,0 +1,18 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: Program.cs: (10,24)-(10,27),
+      Message: The property 'Tag' of type 'MyApp.Domain.NonEquatable' is marked [OptimizedEnumIndex] but its type does not implement IEquatable<T>; the index will not be generated. Implement IEquatable<T> on the property type or remove the attribute.,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: OE0202,
+        Title: OptimizedEnumIndex property type does not implement IEquatable<T>,
+        MessageFormat: The property '{0}' of type '{1}' is marked [OptimizedEnumIndex] but its type does not implement IEquatable<T>; the index will not be generated. Implement IEquatable<T> on the property type or remove the attribute.,
+        Category: OptimizedEnums.Usage,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

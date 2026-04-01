@@ -1,0 +1,18 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: Program.cs: (8,18)-(8,22),
+      Message: The property 'Name' is marked [OptimizedEnumIndex] but its name conflicts with a reserved generated member name ('s_byName, FromName, TryFromName'). The index will not be generated. Rename the property or remove the attribute.,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: OE0204,
+        Title: OptimizedEnumIndex property name conflicts with a reserved generated member,
+        MessageFormat: The property '{0}' is marked [OptimizedEnumIndex] but its name conflicts with a reserved generated member name ('{1}'). The index will not be generated. Rename the property or remove the attribute.,
+        Category: OptimizedEnums.Usage,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

@@ -35,6 +35,10 @@ internal static class EnumSyntaxProvider
         var diagnostics = new List<DiagnosticInfo>();
         var location = classDecl.CreateLocationInfo();
         var className = classSymbol.Name;
+        var compilation = context.SemanticModel.Compilation;
+
+        var hasNotNullWhen = compilation.GetTypeByMetadataName(
+            "System.Diagnostics.CodeAnalysis.NotNullWhenAttribute") is not null;
 
         // OE0001: Must be partial
         var isPartial = classDecl.Modifiers.Any(static m => m.IsKind(SyntaxKind.PartialKeyword));
@@ -53,7 +57,9 @@ internal static class EnumSyntaxProvider
                 MemberNames: EquatableArray<string>.Empty,
                 ContainingTypeNames: EquatableArray<string>.Empty,
                 Diagnostics: diagnostics.ToEquatableArray(),
-                Location: location);
+                IndexedProperties: EquatableArray<IndexedPropertyInfo>.Empty,
+                Location: location,
+                HasNotNullWhenAttribute: hasNotNullWhen);
         }
 
         // Extract TValue (second type argument of OptimizedEnum<TEnum, TValue>)
@@ -142,6 +148,9 @@ internal static class EnumSyntaxProvider
                     className));
         }
 
+        var indexedProperties = CollectIndexedProperties(
+            classSymbol, context.SemanticModel.Compilation, diagnostics);
+
         return new EnumInfo(
             Namespace: GetNamespace(classSymbol),
             ClassName: className,
@@ -150,7 +159,9 @@ internal static class EnumSyntaxProvider
             MemberNames: validMembers.ToEquatableArray(),
             ContainingTypeNames: GetContainingTypeDeclarations(classSymbol),
             Diagnostics: diagnostics.ToEquatableArray(),
-            Location: location);
+            IndexedProperties: indexedProperties,
+            Location: location,
+            HasNotNullWhenAttribute: hasNotNullWhen);
     }
 
     private static INamedTypeSymbol? FindOptimizedEnumBase(
@@ -237,6 +248,140 @@ internal static class EnumSyntaxProvider
                 }
             }
         }
+    }
+
+    private static EquatableArray<IndexedPropertyInfo> CollectIndexedProperties(
+        INamedTypeSymbol classSymbol,
+        Compilation compilation,
+        List<DiagnosticInfo> diagnostics)
+    {
+        const string attrMetadataName = "LayeredCraft.OptimizedEnums.OptimizedEnumIndexAttribute";
+        const string iEquatableMetadataName = "System.IEquatable`1";
+
+        var attrSymbol = compilation.GetTypeByMetadataName(attrMetadataName);
+        if (attrSymbol is null)
+            return EquatableArray<IndexedPropertyInfo>.Empty;
+
+        var iEquatableSymbol = compilation.GetTypeByMetadataName(iEquatableMetadataName);
+        var optimizedEnumBase = compilation.GetTypeByMetadataName(OptimizedEnumBaseMetadataName);
+
+        // Property names that would collide with existing generated members.
+        // "Name" → s_byName / FromName / TryFromName
+        // "Value" → s_byValue / FromValue / TryFromValue
+        var reservedNames = new HashSet<string>(StringComparer.Ordinal) { "Name", "Value" };
+
+        var result = new List<IndexedPropertyInfo>();
+        var seenNames = new HashSet<string>(StringComparer.Ordinal);
+
+        // Walk base chain (skip the concrete class itself), stop at OptimizedEnum<,>
+        var current = classSymbol.BaseType;
+        while (current is not null)
+        {
+            if (optimizedEnumBase is not null &&
+                SymbolEqualityComparer.Default.Equals(current.OriginalDefinition, optimizedEnumBase))
+                break;
+
+            foreach (var member in current.GetMembers().OfType<IPropertySymbol>())
+            {
+                var attr = member.GetAttributes()
+                    .FirstOrDefault(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, attrSymbol));
+
+                if (attr is null)
+                    continue;
+
+                // OE0203: property must be a non-static, accessible instance property with a readable getter
+                if (member.IsStatic ||
+                    member.IsIndexer ||
+                    member.Parameters.Length > 0 ||
+                    member.GetMethod is null ||
+                    member.DeclaredAccessibility == Accessibility.Private ||
+                    member.GetMethod.DeclaredAccessibility == Accessibility.Private)
+                {
+                    diagnostics.Add(new DiagnosticInfo(
+                        DiagnosticDescriptors.IndexPropertyNotAccessible,
+                        member.CreateLocationInfo(),
+                        member.Name,
+                        current.Name));
+                    continue;
+                }
+
+                // OE0204: property name must not conflict with reserved generated member names
+                if (reservedNames.Contains(member.Name))
+                {
+                    var conflicting = member.Name == "Name"
+                        ? "s_byName, FromName, TryFromName"
+                        : "s_byValue, FromValue, TryFromValue";
+                    diagnostics.Add(new DiagnosticInfo(
+                        DiagnosticDescriptors.IndexPropertyNameConflict,
+                        member.CreateLocationInfo(),
+                        member.Name,
+                        conflicting));
+                    continue;
+                }
+
+                var propType = member.Type;
+
+                // OE0202: warn if property type doesn't implement IEquatable<T>
+                if (iEquatableSymbol is not null)
+                {
+                    var implementsIEquatable = propType.AllInterfaces.Any(i =>
+                        SymbolEqualityComparer.Default.Equals(i.OriginalDefinition, iEquatableSymbol) &&
+                        i.TypeArguments.Length == 1 &&
+                        SymbolEqualityComparer.Default.Equals(i.TypeArguments[0], propType));
+
+                    if (!implementsIEquatable)
+                    {
+                        diagnostics.Add(new DiagnosticInfo(
+                            DiagnosticDescriptors.IndexPropertyNotEquatable,
+                            member.CreateLocationInfo(),
+                            member.Name,
+                            propType.ToDisplayString()));
+                        continue;
+                    }
+                }
+
+                // Only mark name as seen after it has passed all validation checks, so that an
+                // invalid nearer-base property does not shadow a valid one higher in the chain.
+                if (!seenNames.Add(member.Name))
+                    continue;
+
+                var isString = propType.SpecialType == SpecialType.System_String;
+                var comparerExpr = string.Empty;
+
+                if (isString)
+                {
+                    var comparisonValue = 4; // StringComparison.Ordinal default
+                    foreach (var namedArg in attr.NamedArguments)
+                    {
+                        if (namedArg.Key == "StringComparison" && namedArg.Value.Value is int cv)
+                        {
+                            comparisonValue = cv;
+                            break;
+                        }
+                    }
+
+                    comparerExpr = comparisonValue switch
+                    {
+                        0 => "global::System.StringComparer.CurrentCulture",
+                        1 => "global::System.StringComparer.CurrentCultureIgnoreCase",
+                        2 => "global::System.StringComparer.InvariantCulture",
+                        3 => "global::System.StringComparer.InvariantCultureIgnoreCase",
+                        5 => "global::System.StringComparer.OrdinalIgnoreCase",
+                        _ => "global::System.StringComparer.Ordinal"
+                    };
+                }
+
+                result.Add(new IndexedPropertyInfo(
+                    PropertyName: member.Name,
+                    PropertyTypeFullyQualified: propType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                    IsStringType: isString,
+                    StringComparerExpression: comparerExpr));
+            }
+
+            current = current.BaseType;
+        }
+
+        return result.ToEquatableArray();
     }
 
     private static EquatableArray<string> GetContainingTypeDeclarations(INamedTypeSymbol symbol)

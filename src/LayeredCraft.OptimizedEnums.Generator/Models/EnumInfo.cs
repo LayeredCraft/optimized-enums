@@ -14,7 +14,9 @@ internal sealed record EnumInfo(
     EquatableArray<string> MemberNames,
     EquatableArray<string> ContainingTypeNames,
     EquatableArray<DiagnosticInfo> Diagnostics,
-    LocationInfo? Location
+    EquatableArray<IndexedPropertyInfo> IndexedProperties,
+    LocationInfo? Location,
+    bool HasNotNullWhenAttribute
 )
 {
     // Location is intentionally excluded from equality so that a position-only change
@@ -28,9 +30,14 @@ internal sealed record EnumInfo(
         && ValueTypeFullyQualified == other.ValueTypeFullyQualified
         && MemberNames == other.MemberNames
         && ContainingTypeNames == other.ContainingTypeNames
-        && Diagnostics == other.Diagnostics;
+        && Diagnostics == other.Diagnostics
+        && IndexedProperties == other.IndexedProperties
+        && HasNotNullWhenAttribute == other.HasNotNullWhenAttribute;
 
-    public override int GetHashCode() =>
-        HashCode.Combine(Namespace, ClassName, FullyQualifiedClassName, ValueTypeFullyQualified,
-            MemberNames, ContainingTypeNames, Diagnostics);
+    public override int GetHashCode()
+    {
+        var h = HashCode.Combine(Namespace, ClassName, FullyQualifiedClassName, ValueTypeFullyQualified,
+            MemberNames, ContainingTypeNames, Diagnostics, IndexedProperties);
+        return HashCode.Combine(h, HasNotNullWhenAttribute);
+    }
 }

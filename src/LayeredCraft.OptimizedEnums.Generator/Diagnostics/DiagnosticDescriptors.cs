@@ -54,6 +54,30 @@ internal static class DiagnosticDescriptors
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
 
+    internal static readonly DiagnosticDescriptor IndexPropertyNotEquatable = new(
+        "OE0202",
+        "OptimizedEnumIndex property type does not implement IEquatable<T>",
+        "The property '{0}' of type '{1}' is marked [OptimizedEnumIndex] but its type does not implement IEquatable<T>; the index will not be generated. Implement IEquatable<T> on the property type or remove the attribute.",
+        UsageCategory,
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
+    internal static readonly DiagnosticDescriptor IndexPropertyNotAccessible = new(
+        "OE0203",
+        "OptimizedEnumIndex property must be an accessible instance property with a readable getter",
+        "The property '{0}' on '{1}' is marked [OptimizedEnumIndex] but cannot be used as an index because it must be a non-static, accessible instance property with a readable getter. The index will not be generated.",
+        UsageCategory,
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
+    internal static readonly DiagnosticDescriptor IndexPropertyNameConflict = new(
+        "OE0204",
+        "OptimizedEnumIndex property name conflicts with a reserved generated member",
+        "The property '{0}' is marked [OptimizedEnumIndex] but its name conflicts with a reserved generated member name ('{1}'). The index will not be generated. Rename the property or remove the attribute.",
+        UsageCategory,
+        DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
     internal static readonly DiagnosticDescriptor GeneratorInternalError = new(
         "OE9001",
         "OptimizedEnum generator internal error",

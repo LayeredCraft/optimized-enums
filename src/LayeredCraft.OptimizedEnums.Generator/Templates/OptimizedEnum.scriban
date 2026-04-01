@@ -52,6 +52,16 @@ partial class {{ class_name }}
             [{{ name }}.Value] = {{ name }}{{ if !for.last }},{{ end }}
             {{~ end ~}}
         };
+{{~ for prop in indexed_properties ~}}
+
+    private static readonly global::System.Collections.Generic.Dictionary<{{ prop.property_type_fully_qualified }}, {{ fully_qualified_class_name }}> s_by{{ prop.property_name }} =
+        new global::System.Collections.Generic.Dictionary<{{ prop.property_type_fully_qualified }}, {{ fully_qualified_class_name }}>({{ member_names.size }}{{ if prop.is_string_type }}, {{ prop.string_comparer_expression }}{{ end }})
+        {
+            {{~ for name in member_names ~}}
+            [{{ name }}.{{ prop.property_name }}] = {{ name }}{{ if !for.last }},{{ end }}
+            {{~ end ~}}
+        };
+{{~ end ~}}
 
     {{ generated_code_attribute }}
     public static global::System.Collections.Generic.IReadOnlyList<{{ fully_qualified_class_name }}> All => s_all;
@@ -76,7 +86,7 @@ partial class {{ class_name }}
     }
 
     {{ generated_code_attribute }}
-    public static bool TryFromName(string name, out {{ fully_qualified_class_name }}? result) =>
+    public static bool TryFromName(string name, {{ if has_not_null_when_attribute }}[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] {{ end }}out {{ fully_qualified_class_name }}? result) =>
         s_byName.TryGetValue(name, out result);
 
     {{ generated_code_attribute }}
@@ -90,7 +100,7 @@ partial class {{ class_name }}
     }
 
     {{ generated_code_attribute }}
-    public static bool TryFromValue({{ value_type_fully_qualified }} value, out {{ fully_qualified_class_name }}? result) =>
+    public static bool TryFromValue({{ value_type_fully_qualified }} value, {{ if has_not_null_when_attribute }}[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] {{ end }}out {{ fully_qualified_class_name }}? result) =>
         s_byValue.TryGetValue(value, out result);
 
     {{ generated_code_attribute }}
@@ -98,4 +108,20 @@ partial class {{ class_name }}
 
     {{ generated_code_attribute }}
     public static bool ContainsValue({{ value_type_fully_qualified }} value) => s_byValue.ContainsKey(value);
+{{~ for prop in indexed_properties ~}}
+
+    {{ generated_code_attribute }}
+    public static {{ fully_qualified_class_name }} From{{ prop.property_name }}({{ prop.property_type_fully_qualified }} value)
+    {
+        if (!s_by{{ prop.property_name }}.TryGetValue(value, out var result))
+            throw new global::System.Collections.Generic.KeyNotFoundException(
+                $"'{value}' is not a valid {{ prop.property_name }} for {{ class_name }}");
+
+        return result;
+    }
+
+    {{ generated_code_attribute }}
+    public static bool TryFrom{{ prop.property_name }}({{ prop.property_type_fully_qualified }} value, {{ if has_not_null_when_attribute }}[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] {{ end }}out {{ fully_qualified_class_name }}? result) =>
+        s_by{{ prop.property_name }}.TryGetValue(value, out result);
+{{~ end ~}}
 }{{ suffix }}

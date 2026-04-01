@@ -11,4 +11,7 @@
  OE0006  | OptimizedEnums.Usage   | Error    | DiagnosticDescriptors
  OE0101  | OptimizedEnums.Usage   | Warning  | DiagnosticDescriptors
  OE0102  | OptimizedEnums.Usage   | Warning  | DiagnosticDescriptors
+ OE0202  | OptimizedEnums.Usage   | Warning  | DiagnosticDescriptors
+ OE0203  | OptimizedEnums.Usage   | Warning  | DiagnosticDescriptors
+ OE0204  | OptimizedEnums.Usage   | Warning  | DiagnosticDescriptors
  OE9001  | OptimizedEnums.Usage   | Error    | DiagnosticDescriptors
