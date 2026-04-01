@@ -78,7 +78,7 @@ partial class Color
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
-    public static bool TryFromName(string name, out global::MyApp.Domain.Color? result) =>
+    public static bool TryFromName(string name, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::MyApp.Domain.Color? result) =>
         s_byName.TryGetValue(name, out result);
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
@@ -92,7 +92,7 @@ partial class Color
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
-    public static bool TryFromValue(string value, out global::MyApp.Domain.Color? result) =>
+    public static bool TryFromValue(string value, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::MyApp.Domain.Color? result) =>
         s_byValue.TryGetValue(value, out result);
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
