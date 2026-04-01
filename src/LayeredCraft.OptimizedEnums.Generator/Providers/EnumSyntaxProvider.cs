@@ -259,6 +259,11 @@ internal static class EnumSyntaxProvider
         var iEquatableSymbol = compilation.GetTypeByMetadataName(iEquatableMetadataName);
         var optimizedEnumBase = compilation.GetTypeByMetadataName(OptimizedEnumBaseMetadataName);
 
+        // Property names that would collide with existing generated members.
+        // "Name" → s_byName / FromName / TryFromName
+        // "Value" → s_byValue / FromValue / TryFromValue
+        var reservedNames = new HashSet<string>(StringComparer.Ordinal) { "Name", "Value" };
+
         var result = new List<IndexedPropertyInfo>();
         var seenNames = new HashSet<string>(StringComparer.Ordinal);
 
@@ -277,6 +282,36 @@ internal static class EnumSyntaxProvider
 
                 if (attr is null || !seenNames.Add(member.Name))
                     continue;
+
+                // OE0203: property must be a non-static, accessible instance property with a readable getter
+                if (member.IsStatic ||
+                    member.IsIndexer ||
+                    member.Parameters.Length > 0 ||
+                    member.GetMethod is null ||
+                    member.DeclaredAccessibility == Accessibility.Private ||
+                    member.GetMethod.DeclaredAccessibility == Accessibility.Private)
+                {
+                    diagnostics.Add(new DiagnosticInfo(
+                        DiagnosticDescriptors.IndexPropertyNotAccessible,
+                        member.CreateLocationInfo(),
+                        member.Name,
+                        current.Name));
+                    continue;
+                }
+
+                // OE0204: property name must not conflict with reserved generated member names
+                if (reservedNames.Contains(member.Name))
+                {
+                    var conflicting = member.Name == "Name"
+                        ? "s_byName, FromName, TryFromName"
+                        : "s_byValue, FromValue, TryFromValue";
+                    diagnostics.Add(new DiagnosticInfo(
+                        DiagnosticDescriptors.IndexPropertyNameConflict,
+                        member.CreateLocationInfo(),
+                        member.Name,
+                        conflicting));
+                    continue;
+                }
 
                 var propType = member.Type;
 

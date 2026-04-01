@@ -1,0 +1,18 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: Program.cs: (8,19)-(8,22),
+      Message: The property 'Tag' on 'BaseEnum' is marked [OptimizedEnumIndex] but cannot be used as an index because it must be a non-static, accessible instance property with a readable getter. The index will not be generated.,
+      Severity: Warning,
+      WarningLevel: 1,
+      Descriptor: {
+        Id: OE0203,
+        Title: OptimizedEnumIndex property must be an accessible instance property with a readable getter,
+        MessageFormat: The property '{0}' on '{1}' is marked [OptimizedEnumIndex] but cannot be used as an index because it must be a non-static, accessible instance property with a readable getter. The index will not be generated.,
+        Category: OptimizedEnums.Usage,
+        DefaultSeverity: Warning,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

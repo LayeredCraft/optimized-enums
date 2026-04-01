@@ -506,4 +506,100 @@ public class GeneratorVerifyTests
                 ExpectedDiagnosticId = "OE0202",
             },
             TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task Warning_OE0203_IndexProperty_PrivateProperty_IsEmitted() =>
+        await GeneratorTestHelpers.VerifyFailure(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public abstract partial class BaseEnum<TSelf> : OptimizedEnum<TSelf, int>
+                        where TSelf : BaseEnum<TSelf>
+                    {
+                        [OptimizedEnumIndex]
+                        private string Tag { get; }
+
+                        protected BaseEnum(int id, string name, string tag) : base(id, name)
+                        {
+                            Tag = tag;
+                        }
+                    }
+
+                    public sealed partial class Status : BaseEnum<Status>
+                    {
+                        public static readonly Status Active = new(1, nameof(Active), "active");
+
+                        private Status(int id, string name, string tag) : base(id, name, tag) { }
+                    }
+                    """,
+                ExpectedDiagnosticId = "OE0203",
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task Warning_OE0203_IndexProperty_StaticProperty_IsEmitted() =>
+        await GeneratorTestHelpers.VerifyFailure(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public abstract partial class BaseEnum<TSelf> : OptimizedEnum<TSelf, int>
+                        where TSelf : BaseEnum<TSelf>
+                    {
+                        [OptimizedEnumIndex]
+                        public static string Tag { get; } = "shared";
+
+                        protected BaseEnum(int id, string name) : base(id, name) { }
+                    }
+
+                    public sealed partial class Status : BaseEnum<Status>
+                    {
+                        public static readonly Status Active = new(1, nameof(Active));
+
+                        private Status(int id, string name) : base(id, name) { }
+                    }
+                    """,
+                ExpectedDiagnosticId = "OE0203",
+            },
+            TestContext.Current.CancellationToken);
+
+    [Fact]
+    public async Task Warning_OE0204_IndexProperty_ReservedName_IsEmitted() =>
+        await GeneratorTestHelpers.VerifyFailure(
+            new VerifyTestOptions
+            {
+                SourceCode = """
+                    using LayeredCraft.OptimizedEnums;
+
+                    namespace MyApp.Domain;
+
+                    public abstract partial class BaseEnum<TSelf> : OptimizedEnum<TSelf, int>
+                        where TSelf : BaseEnum<TSelf>
+                    {
+                        [OptimizedEnumIndex]
+                        public string Name { get; }
+
+                        protected BaseEnum(int id, string name, string displayName) : base(id, name)
+                        {
+                            Name = displayName;
+                        }
+                    }
+
+                    public sealed partial class Status : BaseEnum<Status>
+                    {
+                        public static readonly Status Active = new(1, nameof(Active), "Active Status");
+
+                        private Status(int id, string name, string displayName) : base(id, name, displayName) { }
+                    }
+                    """,
+                ExpectedDiagnosticId = "OE0204",
+            },
+            TestContext.Current.CancellationToken);
 }

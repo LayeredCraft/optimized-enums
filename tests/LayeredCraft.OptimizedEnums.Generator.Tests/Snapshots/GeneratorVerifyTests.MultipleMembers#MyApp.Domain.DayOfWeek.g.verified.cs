@@ -98,7 +98,7 @@ partial class DayOfWeek
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
-    public static bool TryFromName(string name, out global::MyApp.Domain.DayOfWeek? result) =>
+    public static bool TryFromName(string name, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::MyApp.Domain.DayOfWeek? result) =>
         s_byName.TryGetValue(name, out result);
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
@@ -112,7 +112,7 @@ partial class DayOfWeek
     }
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
-    public static bool TryFromValue(int value, out global::MyApp.Domain.DayOfWeek? result) =>
+    public static bool TryFromValue(int value, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::MyApp.Domain.DayOfWeek? result) =>
         s_byValue.TryGetValue(value, out result);
 
     [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.Generator", "REPLACED")]
