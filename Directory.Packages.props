@@ -26,5 +26,10 @@
     <PackageVersion Include="Verify.XunitV3" Version="31.15.0" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
     <PackageVersion Include="xunit.v3.mtp-v2" Version="3.2.2" />
+    <!-- EFCore package -->
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.4" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageVersion Include="Testcontainers.PostgreSql" Version="4.4.0" />
   </ItemGroup>
 </Project>

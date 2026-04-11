@@ -54,11 +54,13 @@
     <Project Path="src/LayeredCraft.OptimizedEnums/LayeredCraft.OptimizedEnums.csproj" />
     <Project Path="src/LayeredCraft.OptimizedEnums.Generator/LayeredCraft.OptimizedEnums.Generator.csproj" />
     <Project Path="src/LayeredCraft.OptimizedEnums.SystemTextJson.Generator/LayeredCraft.OptimizedEnums.SystemTextJson.Generator.csproj" />
+    <Project Path="src/LayeredCraft.OptimizedEnums.EFCore.Generator/LayeredCraft.OptimizedEnums.EFCore.Generator.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/LayeredCraft.OptimizedEnums.Tests/LayeredCraft.OptimizedEnums.Tests.csproj" />
     <Project Path="tests/LayeredCraft.OptimizedEnums.Generator.Tests/LayeredCraft.OptimizedEnums.Generator.Tests.csproj" />
     <Project Path="tests/LayeredCraft.OptimizedEnums.SystemTextJson.Tests/LayeredCraft.OptimizedEnums.SystemTextJson.Tests.csproj" />
+    <Project Path="tests/LayeredCraft.OptimizedEnums.EFCore.Tests/LayeredCraft.OptimizedEnums.EFCore.Tests.csproj" />
     <Project Path="tests/LayeredCraft.OptimizedEnums.Benchmarks/LayeredCraft.OptimizedEnums.Benchmarks.csproj" />
   </Folder>
 </Solution>

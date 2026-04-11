@@ -1,0 +1,17 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: Program.cs: (4,0)-(7,1),
+      Message: The class 'NotAnEnum' must inherit from OptimizedEnum<TEnum, TValue> to use [OptimizedEnumEfCore],
+      Severity: Error,
+      Descriptor: {
+        Id: OE3001,
+        Title: OptimizedEnumEfCore requires an OptimizedEnum subclass,
+        MessageFormat: The class '{0}' must inherit from OptimizedEnum<TEnum, TValue> to use [OptimizedEnumEfCore],
+        Category: OptimizedEnums.EFCore,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

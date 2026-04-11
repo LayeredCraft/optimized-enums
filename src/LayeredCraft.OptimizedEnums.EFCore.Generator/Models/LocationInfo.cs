@@ -1,0 +1,38 @@
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
+
+namespace LayeredCraft.OptimizedEnums.EFCore.Generator.Models;
+
+internal sealed record LocationInfo(string FilePath, TextSpan TextSpan, LinePositionSpan LineSpan);
+
+internal static class LocationInfoExtensions
+{
+    extension(LocationInfo locationInfo)
+    {
+        internal Location ToLocation() =>
+            Location.Create(locationInfo.FilePath, locationInfo.TextSpan, locationInfo.LineSpan);
+    }
+
+    extension(Location location)
+    {
+        internal LocationInfo? CreateLocationInfo() =>
+            location.SourceTree is null
+                ? null
+                : new LocationInfo(
+                    location.SourceTree.FilePath,
+                    location.SourceSpan,
+                    location.GetLineSpan().Span);
+    }
+
+    extension(ISymbol symbol)
+    {
+        internal LocationInfo? CreateLocationInfo() =>
+            symbol.Locations.FirstOrDefault()?.CreateLocationInfo();
+    }
+
+    extension(SyntaxNode syntaxNode)
+    {
+        internal LocationInfo? CreateLocationInfo() =>
+            syntaxNode.GetLocation().CreateLocationInfo();
+    }
+}

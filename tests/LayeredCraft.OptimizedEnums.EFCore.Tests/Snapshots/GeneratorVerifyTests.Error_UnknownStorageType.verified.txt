@@ -1,0 +1,17 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: Program.cs: (5,0)-(11,1),
+      Message: The class 'OrderStatus' specifies an unknown OptimizedEnumEfCoreStorage value '99'; valid values are ByValue (0) and ByName (1),
+      Severity: Error,
+      Descriptor: {
+        Id: OE3003,
+        Title: Unknown OptimizedEnumEfCoreStorage value,
+        MessageFormat: The class '{0}' specifies an unknown OptimizedEnumEfCoreStorage value '{1}'; valid values are ByValue (0) and ByName (1),
+        Category: OptimizedEnums.EFCore,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

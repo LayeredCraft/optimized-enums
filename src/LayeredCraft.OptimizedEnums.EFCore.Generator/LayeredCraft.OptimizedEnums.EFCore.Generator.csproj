@@ -1,0 +1,64 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <DefineConstants>$(DefineConstants);SCRIBAN_NO_SYSTEM_TEXT_JSON</DefineConstants>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IsPackable>true</IsPackable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <PackageScribanIncludeSource>true</PackageScribanIncludeSource>
+    <PackageId>LayeredCraft.OptimizedEnums.EFCore</PackageId>
+    <AssemblyName>LayeredCraft.OptimizedEnums.EFCore.Generator</AssemblyName>
+    <RootNamespace>LayeredCraft.OptimizedEnums.EFCore.Generator</RootNamespace>
+    <Title>LayeredCraft.OptimizedEnums.EFCore</Title>
+    <Description>Entity Framework Core source-generated converters for LayeredCraft.OptimizedEnums. Decorate your OptimizedEnum class with [OptimizedEnumEfCore] to get zero-reflection, AOT-safe EF Core value converters and comparer generated automatically.</Description>
+    <PackageTags>enum;source-generator;smart-enum;dotnet;csharp;efcore;entity-framework;aot</PackageTags>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Public dependency: consumers get the core package automatically. -->
+    <ProjectReference
+      Include="..\LayeredCraft.OptimizedEnums.Generator\LayeredCraft.OptimizedEnums.Generator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Scriban" IncludeAssets="Build" />
+  </ItemGroup>
+
+  <!-- Embed Scriban templates as resources -->
+  <ItemGroup>
+    <Compile Remove="Templates\*.scriban" />
+    <EmbeddedResource Include="Templates\*.scriban" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Meziantou.Polyfill">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+    <!-- EF Core is required by consumers for the generated code to compile, but EF Core 9+
+         targets net8.0+ and cannot be referenced from a netstandard2.0 generator assembly.
+         The generator emits text only and does not require the EF Core assembly itself.
+         Consumers must have Microsoft.EntityFrameworkCore >= 8.0.0 in their own projects. -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
+    <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
+  </ItemGroup>
+
+  <!-- Pack generator DLL into analyzers folder -->
+  <ItemGroup>
+    <None
+      Include="$(OutputPath)\LayeredCraft.OptimizedEnums.EFCore.Generator.dll"
+      Pack="true"
+      PackagePath="analyzers/dotnet/cs"
+      Visible="false" />
+  </ItemGroup>
+</Project>

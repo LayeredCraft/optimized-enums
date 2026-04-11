@@ -1,0 +1,30 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: Program.cs: (5,0)-(11,1),
+      Message: The class 'OrderStatus' must be declared as partial for OptimizedEnum source generation,
+      Severity: Error,
+      Descriptor: {
+        Id: OE0001,
+        Title: OptimizedEnum class must be partial,
+        MessageFormat: The class '{0}' must be declared as partial for OptimizedEnum source generation,
+        Category: OptimizedEnums.Usage,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: Program.cs: (5,0)-(11,1),
+      Message: The class 'OrderStatus' must be declared as partial for [OptimizedEnumEfCore] source generation,
+      Severity: Error,
+      Descriptor: {
+        Id: OE3002,
+        Title: OptimizedEnum class must be partial for EF Core generation,
+        MessageFormat: The class '{0}' must be declared as partial for [OptimizedEnumEfCore] source generation,
+        Category: OptimizedEnums.EFCore,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}
