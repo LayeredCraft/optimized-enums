@@ -60,6 +60,30 @@ To add source-generated `System.Text.Json` converter support, install the System
 
 See [JSON Serialization](../usage/json-serialization.md) for usage details.
 
+## Optional: Entity Framework Core
+
+To add source-generated EF Core value converter support, install the EFCore package. It declares the core package as a dependency:
+
+=== ".NET CLI"
+
+    ```bash
+    dotnet add package LayeredCraft.OptimizedEnums.EFCore
+    ```
+
+=== "Package Manager"
+
+    ```powershell
+    Install-Package LayeredCraft.OptimizedEnums.EFCore
+    ```
+
+=== "PackageReference"
+
+    ```xml
+    <PackageReference Include="LayeredCraft.OptimizedEnums.EFCore" Version="x.x.x" />
+    ```
+
+Supports EF Core 8, 9, and 10. See [Entity Framework Core](../usage/ef-core.md) for usage details.
+
 ## Verifying the Installation
 
 After adding the package, define a type that inherits from `OptimizedEnum<TEnum, TValue>` and declare it `partial`. Build the project — the generator runs during compilation and produces the lookup members. You can inspect the generated output under `obj/` or via your IDE's "Go to definition" on any generated method.

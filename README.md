@@ -17,7 +17,7 @@
 |---------|-------|-----------|
 | **LayeredCraft.OptimizedEnums** | [![NuGet](https://img.shields.io/nuget/v/LayeredCraft.OptimizedEnums.svg)](https://www.nuget.org/packages/LayeredCraft.OptimizedEnums) | [![Downloads](https://img.shields.io/nuget/dt/LayeredCraft.OptimizedEnums.svg)](https://www.nuget.org/packages/LayeredCraft.OptimizedEnums/) |
 | **LayeredCraft.OptimizedEnums.SystemTextJson** | [![NuGet](https://img.shields.io/nuget/v/LayeredCraft.OptimizedEnums.SystemTextJson.svg)](https://www.nuget.org/packages/LayeredCraft.OptimizedEnums.SystemTextJson) | [![Downloads](https://img.shields.io/nuget/dt/LayeredCraft.OptimizedEnums.SystemTextJson.svg)](https://www.nuget.org/packages/LayeredCraft.OptimizedEnums.SystemTextJson/) |
-| **LayeredCraft.OptimizedEnums.EFCore** | _coming soon_ | |
+| **LayeredCraft.OptimizedEnums.EFCore** | [![NuGet](https://img.shields.io/nuget/v/LayeredCraft.OptimizedEnums.EFCore.svg)](https://www.nuget.org/packages/LayeredCraft.OptimizedEnums.EFCore) | [![Downloads](https://img.shields.io/nuget/dt/LayeredCraft.OptimizedEnums.EFCore.svg)](https://www.nuget.org/packages/LayeredCraft.OptimizedEnums.EFCore/) |
 | **LayeredCraft.OptimizedEnums.Dapper** | _coming soon_ | |
 | **LayeredCraft.OptimizedEnums.AutoFixture** | _coming soon_ | |
 
@@ -118,6 +118,42 @@ public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int>
 ```
 
 Two strategies are available: `ByName` (serializes as the member name string) and `ByValue` (serializes as the underlying value). See the [JSON Serialization docs](https://layeredcraft.github.io/optimized-enums/usage/json-serialization/) for full details.
+
+## Entity Framework Core
+
+Add `LayeredCraft.OptimizedEnums.EFCore` for source-generated, zero-reflection EF Core value converter support. One package is all you need — it pulls in the core package automatically:
+
+```bash
+dotnet add package LayeredCraft.OptimizedEnums.EFCore
+```
+
+Decorate your class with `[OptimizedEnumEfCore]` and the generator emits concrete `ValueConverter` classes and registration helpers:
+
+```csharp
+using LayeredCraft.OptimizedEnums;
+using LayeredCraft.OptimizedEnums.EFCore;
+
+[OptimizedEnumEfCore(OptimizedEnumEfCoreStorage.ByValue)]
+public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int>
+{
+    public static readonly OrderStatus Pending = new(1, nameof(Pending));
+    public static readonly OrderStatus Paid    = new(2, nameof(Paid));
+    public static readonly OrderStatus Shipped = new(3, nameof(Shipped));
+
+    private OrderStatus(int value, string name) : base(value, name) { }
+}
+```
+
+Register conversions with the global convention hook in your `DbContext`:
+
+```csharp
+protected override void ConfigureConventions(ModelConfigurationBuilder builder)
+{
+    builder.ConfigureOptimizedEnums();
+}
+```
+
+Two strategies are available: `ByValue` (stores the underlying value) and `ByName` (stores the member name string). See the [Entity Framework Core docs](https://layeredcraft.github.io/optimized-enums/usage/ef-core/) for full details.
 
 ## Installation
 

@@ -124,6 +124,72 @@ public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int> { ... 
 public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int> { ... }
 ```
 
+## EFCore Diagnostics
+
+The `LayeredCraft.OptimizedEnums.EFCore` generator emits diagnostics with the `OE3xxx` prefix.
+
+### OE3001 — Not an OptimizedEnum
+
+**Message:** `The class '{0}' must inherit from OptimizedEnum<TEnum, TValue> to use [OptimizedEnumEfCore]`
+
+**Cause:** `[OptimizedEnumEfCore]` was applied to a class that does not inherit from `OptimizedEnum<TEnum, TValue>`.
+
+**Fix:** Remove the attribute, or make the class inherit from `OptimizedEnum<TEnum, TValue>` (directly or through an abstract intermediate base class).
+
+### OE3002 — Must Be Partial
+
+**Message:** `The class '{0}' must be declared as partial for [OptimizedEnumEfCore] source generation`
+
+**Cause:** A class decorated with `[OptimizedEnumEfCore]` is missing the `partial` keyword.
+
+**Fix:**
+```csharp
+// Before
+[OptimizedEnumEfCore]
+public sealed class OrderStatus : OptimizedEnum<OrderStatus, int> { ... }
+
+// After
+[OptimizedEnumEfCore]
+public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int> { ... }
+```
+
+### OE3003 — Unknown Storage Type
+
+**Message:** `The class '{0}' specifies an unknown OptimizedEnumEfCoreStorage value '{1}'; valid values are ByValue (0) and ByName (1)`
+
+**Cause:** An explicit integer cast was used to pass an undefined `OptimizedEnumEfCoreStorage` value to `[OptimizedEnumEfCore]`.
+
+**Fix:** Use only the defined enum members:
+```csharp
+[OptimizedEnumEfCore(OptimizedEnumEfCoreStorage.ByValue)]   // or ByName
+public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int> { ... }
+```
+
+### OE3004 — Unsupported Target
+
+**Message:** `[OptimizedEnumEfCore] cannot be applied to abstract class '{0}'; apply it to a concrete sealed partial derived class`
+
+**Cause:** `[OptimizedEnumEfCore]` was applied to an abstract class. Abstract classes cannot serve as the target for converter generation because they cannot be instantiated.
+
+**Fix:** Apply the attribute only to concrete (`sealed`) derived classes:
+```csharp
+// Wrong — abstract base class
+[OptimizedEnumEfCore]
+public abstract partial class OrderStatusBase : OptimizedEnum<OrderStatusBase, int> { }
+
+// Correct — concrete derived class
+[OptimizedEnumEfCore]
+public sealed partial class OrderStatus : OrderStatusBase<OrderStatus> { ... }
+```
+
+### OE9003 — Internal Generator Error
+
+**Message:** `An unexpected error occurred while generating the EF Core support for '{0}': {1}`
+
+**Cause:** An unhandled exception occurred inside the EFCore generator. This is a generator bug.
+
+**Fix:** Report the issue with the full diagnostic message and the enum source code. As a workaround, the EFCore attribute can be temporarily removed from the affected type.
+
 ## Generator Not Running?
 
 If you add the package but see no generated members, check:

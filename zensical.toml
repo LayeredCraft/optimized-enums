@@ -24,7 +24,8 @@ nav = [
     { "Defining Enums" = "usage/defining-enums.md" },
     { "Lookups & Queries" = "usage/lookups.md" },
     { "String Values" = "usage/string-values.md" },
-    { "JSON Serialization" = "usage/json-serialization.md" }
+    { "JSON Serialization" = "usage/json-serialization.md" },
+    { "Entity Framework Core" = "usage/ef-core.md" }
   ] },
   { "Advanced" = [
     { "Performance" = "advanced/performance.md" },
