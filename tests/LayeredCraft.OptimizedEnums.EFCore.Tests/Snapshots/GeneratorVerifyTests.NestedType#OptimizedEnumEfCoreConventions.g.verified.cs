@@ -20,7 +20,7 @@ namespace LayeredCraft.OptimizedEnums.EFCore
         {
             
                         builder.Properties<global::MyApp.Domain.Outer.Status>()
-                            .HaveConversion<global::MyApp.Domain.OuterStatusValueConverter>();
+                            .HaveConversion<global::MyApp.Domain.Outer_StatusValueConverter>();
                         
             return builder;
         }

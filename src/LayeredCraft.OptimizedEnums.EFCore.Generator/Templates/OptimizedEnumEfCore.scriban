@@ -42,7 +42,7 @@ internal sealed class {{ converter_prefix }}NameConverter
 }
 
 {{ generated_code_attribute }}
-public static class {{ extension_class_name }}
+internal static class {{ extension_class_name }}
 {
     public static global::Microsoft.EntityFrameworkCore.Metadata.Builders.PropertyBuilder<{{ fully_qualified_class_name }}> Has{{ class_name }}ConversionByValue(
         this global::Microsoft.EntityFrameworkCore.Metadata.Builders.PropertyBuilder<{{ fully_qualified_class_name }}> builder)

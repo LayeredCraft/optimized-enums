@@ -41,7 +41,7 @@ internal sealed class PriorityNameConverter
 }
 
 [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.EFCore.Generator", "REPLACED")]
-public static class PriorityEfCoreExtensions
+internal static class PriorityEfCoreExtensions
 {
     public static global::Microsoft.EntityFrameworkCore.Metadata.Builders.PropertyBuilder<global::Priority> HasPriorityConversionByValue(
         this global::Microsoft.EntityFrameworkCore.Metadata.Builders.PropertyBuilder<global::Priority> builder)

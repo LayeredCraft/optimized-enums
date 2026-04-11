@@ -43,7 +43,7 @@ internal sealed class ColorNameConverter
 }
 
 [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.EFCore.Generator", "REPLACED")]
-public static class MyApp_Domain_ColorEfCoreExtensions
+internal static class MyApp_Domain_ColorEfCoreExtensions
 {
     public static global::Microsoft.EntityFrameworkCore.Metadata.Builders.PropertyBuilder<global::MyApp.Domain.Color> HasColorConversionByValue(
         this global::Microsoft.EntityFrameworkCore.Metadata.Builders.PropertyBuilder<global::MyApp.Domain.Color> builder)

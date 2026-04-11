@@ -101,7 +101,7 @@ internal static class EfCoreEmitter
         if (info.ContainingTypeSimpleNames.Length == 0)
             return info.ClassName;
 
-        return string.Concat(info.ContainingTypeSimpleNames) + info.ClassName;
+        return string.Join("_", info.ContainingTypeSimpleNames) + "_" + info.ClassName;
     }
 
     private static string BuildExtensionClassName(EfCoreInfo info)

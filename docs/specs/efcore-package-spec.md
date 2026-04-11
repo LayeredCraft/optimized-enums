@@ -243,23 +243,21 @@ For every opted-in enum, generate explicit methods that remove ambiguity and imp
 Example for `OrderStatus`:
 
 ```csharp
-public static class OrderStatusEfCoreExtensions
+internal static class OrderStatusEfCoreExtensions
 {
     public static PropertyBuilder<global::MyApp.Domain.OrderStatus> HasOrderStatusConversionByValue(
         this PropertyBuilder<global::MyApp.Domain.OrderStatus> builder);
 
-    public static PropertyBuilder<global::MyApp.Domain.OrderStatus?> HasOrderStatusConversionByValue(
-        this PropertyBuilder<global::MyApp.Domain.OrderStatus?> builder);
-
     public static PropertyBuilder<global::MyApp.Domain.OrderStatus> HasOrderStatusConversionByName(
         this PropertyBuilder<global::MyApp.Domain.OrderStatus> builder);
-
-    public static PropertyBuilder<global::MyApp.Domain.OrderStatus?> HasOrderStatusConversionByName(
-        this PropertyBuilder<global::MyApp.Domain.OrderStatus?> builder);
 }
 ```
 
-These methods apply the appropriate converter and comparer together via `HasConversion` + `HasComparer`.
+The extension class is `internal` (not `public`) because the generated methods reference the enum type in their signatures. If the enum is `internal` (the common case for domain types), a `public` extension class would expose an internal type and produce an inconsistent-accessibility error (CS0051/CS0053). Emitting `internal` is safe for all enum accessibilities and is consistent with the `internal sealed class` converters.
+
+**No nullable overloads**: `PropertyBuilder<T>` and `PropertyBuilder<T?>` resolve to the same generic instantiation for reference types (all `OptimizedEnum<TEnum,TValue>` types are reference types). Adding `PropertyBuilder<T?>` overloads alongside `PropertyBuilder<T>` overloads would produce duplicate method signatures (CS0111). EF Core's null lifting handles nullable properties automatically through the non-nullable converter — no separate overload is needed.
+
+These methods apply the appropriate converter via `HasConversion`.
 
 ### Extension class naming
 
@@ -302,8 +300,9 @@ Example names for enum `OrderStatus`:
 
 - `OrderStatusValueConverter`
 - `OrderStatusNameConverter`
-- `OrderStatusValueComparer`
 - enum-specific extension container class
+
+No `OrderStatusValueComparer` is generated — see Value comparer section.
 
 Both `ByValue` and `ByName` converters are always generated for every opted-in enum, regardless of the enum attribute's default storage mode. This is required because per-property overrides allow callers to switch between modes at any point.
 
@@ -372,23 +371,17 @@ This means:
 - The convention hook registers once for the non-nullable type; EF applies the converter to nullable properties of the same type automatically.
 - The generated converter code does not need to handle null on either the write or read path.
 
-### Value comparer requirements
+### Value comparer
 
-The implementation must generate or apply a comparer if EF requires one for stable tracking, keys, or change detection.
+No custom `ValueComparer` class is generated in v1. Implementation validation confirmed that EF Core's default comparer correctly handles `OptimizedEnum` instances:
 
-Required behavior:
+- Equality uses the type's `Equals` / `==` operator, which compares by value for optimized enums.
+- Hash code delegates to `GetHashCode()`, which is consistent with optimized-enum equality.
+- Snapshot returns the same instance, which is correct because optimized enums are immutable singletons.
 
-- Two enum instances compare equal if the underlying optimized-enum equality says they are equal.
-- Hashing must remain consistent with optimized-enum equality.
-- Snapshot behavior must be correct for immutable optimized-enum instances.
+The `HaveConversion<TConverter, TComparer>()` and `HasConversion<TConverter, TComparer>()` API shapes do exist in EF Core 8+, but registering a comparer separately via `HasComparer<T>()` or `HaveValueComparer<T>()` as standalone calls is not a valid EF Core API. Since no custom comparer is needed, neither form is used.
 
-Preferred comparer logic:
-
-- equality: `left == right` or `Equals(left, right)`
-- hash: `value == null ? 0 : value.GetHashCode()`
-- snapshot: return the same instance because optimized enums are immutable singletons
-
-If implementation testing proves that a custom comparer is unnecessary for some scenarios, it may still be generated uniformly for consistency.
+If a future scenario requires a custom comparer (e.g., case-insensitive name comparisons for `ByName`), a `{Prefix}ValueComparer` class can be added and wired through `HasConversion<TConverter, TComparer>()` at that time.
 
 ## Discovery and Generation Rules
 
@@ -644,10 +637,9 @@ For one enum, the generated file should include:
 
 - any necessary using-free fully-qualified references
 - `GeneratedCode` attributes
-- concrete comparer type
 - concrete `ByValue` converter type
 - concrete `ByName` converter type
-- enum-specific property-builder extension methods
+- enum-specific property-builder extension methods (`internal static class`)
 - any enum-specific convention registration helpers if needed
 
 ### Shared/global output contents
@@ -678,12 +670,11 @@ protected override void ConfigureConventions(ModelConfigurationBuilder builder)
 
 ### Implementation guidance
 
-The generated global hook registers both converter and comparer for each opted-in enum:
+The generated global hook registers only the converter for each opted-in enum (no comparer — see Value comparer section):
 
 ```csharp
 builder.Properties<global::MyApp.Domain.OrderStatus>()
-    .HaveConversion<global::MyApp.Domain.OrderStatusValueConverter>()
-    .HaveValueComparer<global::MyApp.Domain.OrderStatusValueComparer>();
+    .HaveConversion<global::MyApp.Domain.OrderStatusValueConverter>();
 ```
 
 One registration per enum covers both nullable and non-nullable properties — EF Core's null lifting applies the converter automatically when the property type is `OrderStatus?`.
@@ -1027,13 +1018,13 @@ These decisions were made during a design interview and are binding for the v1 i
 | Generic property builder helpers | Deferred to v2. `TryFromValue`/`TryFromName` are generated on concrete classes, not on the base type, so generic helpers cannot be implemented without reflection or static abstract interface members. |
 | DLL vs generated API boundary | Anything requiring generated lookup methods must be generated. Anything that would make sense as a normal library API without source generation can be compiled into the DLL. |
 | Nullable converter shape | Non-null converters (`ValueConverter<TEnum, TProvider>`). EF Core handles null lifting automatically for nullable properties. |
-| ValueComparer generation | Always generate for every opted-in enum, unconditionally. |
+| ValueComparer generation | Not generated. EF Core's default comparer correctly handles immutable `OptimizedEnum` singletons. `HasComparer<T>()` / `HaveValueComparer<T>()` are not valid standalone EF Core APIs; the two-type overload `HasConversion<TConverter, TComparer>()` exists but is unnecessary. |
 | Both converter modes per enum | Always generate both ByValue and ByName converters regardless of attribute default, to support per-property overrides. |
 | Convention file when no enums exist | Always emit `ConfigureOptimizedEnums()` with an empty body. |
 | Abstract class with attribute | OE3004 build error. |
 | Nested types | Fully supported, following STJ generator pattern. |
 | Extension class naming collision | Namespace-qualify with underscores: `MyApp_Domain_OrderStatusEfCoreExtensions`. |
-| Convention registration | Register converter + comparer together via `HaveConversion<T>().HaveValueComparer<T>()`. |
+| Convention registration | Register converter only via `HaveConversion<T>()`. No comparer registration — see ValueComparer generation row. |
 | String-valued enum with ByValue | No special-case. Emitted like any other TValue. |
 | Internal generator error diagnostic | OE9003 (aligns with STJ's OE9002, not OE3999 as originally specified). |
 | EF Core baseline version | Pin to EF Core 9 in `Directory.Packages.props`. |

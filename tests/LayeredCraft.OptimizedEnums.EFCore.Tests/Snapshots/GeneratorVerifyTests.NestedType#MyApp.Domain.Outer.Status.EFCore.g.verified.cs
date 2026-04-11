@@ -13,10 +13,10 @@
 namespace MyApp.Domain;
 
 [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.EFCore.Generator", "REPLACED")]
-internal sealed class OuterStatusValueConverter
+internal sealed class Outer_StatusValueConverter
     : global::Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<global::MyApp.Domain.Outer.Status, int>
 {
-    public OuterStatusValueConverter()
+    public Outer_StatusValueConverter()
         : base(static v => v.Value, static v => FromValue(v))
     { }
 
@@ -28,10 +28,10 @@ internal sealed class OuterStatusValueConverter
 }
 
 [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.EFCore.Generator", "REPLACED")]
-internal sealed class OuterStatusNameConverter
+internal sealed class Outer_StatusNameConverter
     : global::Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<global::MyApp.Domain.Outer.Status, global::System.String>
 {
-    public OuterStatusNameConverter()
+    public Outer_StatusNameConverter()
         : base(static v => v.Name, static v => FromName(v))
     { }
 
@@ -43,19 +43,19 @@ internal sealed class OuterStatusNameConverter
 }
 
 [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.EFCore.Generator", "REPLACED")]
-public static class MyApp_Domain_Outer_StatusEfCoreExtensions
+internal static class MyApp_Domain_Outer_StatusEfCoreExtensions
 {
     public static global::Microsoft.EntityFrameworkCore.Metadata.Builders.PropertyBuilder<global::MyApp.Domain.Outer.Status> HasStatusConversionByValue(
         this global::Microsoft.EntityFrameworkCore.Metadata.Builders.PropertyBuilder<global::MyApp.Domain.Outer.Status> builder)
     {
-        builder.HasConversion<global::MyApp.Domain.OuterStatusValueConverter>();
+        builder.HasConversion<global::MyApp.Domain.Outer_StatusValueConverter>();
         return builder;
     }
 
     public static global::Microsoft.EntityFrameworkCore.Metadata.Builders.PropertyBuilder<global::MyApp.Domain.Outer.Status> HasStatusConversionByName(
         this global::Microsoft.EntityFrameworkCore.Metadata.Builders.PropertyBuilder<global::MyApp.Domain.Outer.Status> builder)
     {
-        builder.HasConversion<global::MyApp.Domain.OuterStatusNameConverter>();
+        builder.HasConversion<global::MyApp.Domain.Outer_StatusNameConverter>();
         return builder;
     }
 }

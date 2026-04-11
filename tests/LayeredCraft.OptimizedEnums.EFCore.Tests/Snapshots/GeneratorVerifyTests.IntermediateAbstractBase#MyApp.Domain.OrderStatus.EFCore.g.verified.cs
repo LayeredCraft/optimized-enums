@@ -43,7 +43,7 @@ internal sealed class OrderStatusNameConverter
 }
 
 [global::System.CodeDom.Compiler.GeneratedCode("LayeredCraft.OptimizedEnums.EFCore.Generator", "REPLACED")]
-public static class MyApp_Domain_OrderStatusEfCoreExtensions
+internal static class MyApp_Domain_OrderStatusEfCoreExtensions
 {
     public static global::Microsoft.EntityFrameworkCore.Metadata.Builders.PropertyBuilder<global::MyApp.Domain.OrderStatus> HasOrderStatusConversionByValue(
         this global::Microsoft.EntityFrameworkCore.Metadata.Builders.PropertyBuilder<global::MyApp.Domain.OrderStatus> builder)
