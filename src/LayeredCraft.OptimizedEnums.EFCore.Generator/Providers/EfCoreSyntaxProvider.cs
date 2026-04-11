@@ -161,9 +161,10 @@ internal static class EfCoreSyntaxProvider
         var current = symbol.ContainingType;
         while (current is not null)
         {
-            result.Insert(0, current.Name);
+            result.Add(current.Name);
             current = current.ContainingType;
         }
+        result.Reverse();
         return result.ToEquatableArray();
     }
 

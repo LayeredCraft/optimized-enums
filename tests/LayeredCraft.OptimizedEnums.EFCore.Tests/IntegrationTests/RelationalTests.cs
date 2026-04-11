@@ -38,8 +38,9 @@ public class RelationalTests : IAsyncLifetime
     [Fact]
     public async Task PrimaryKey_AsEnum_WorksCorrectly()
     {
+        var ct = TestContext.Current.CancellationToken;
         await using var ctx = CreateContext();
-        await ctx.Database.EnsureCreatedAsync();
+        await ctx.Database.EnsureCreatedAsync(ct);
 
         ctx.RelationalOrders.Add(new RelationalOrder
         {
@@ -47,11 +48,11 @@ public class RelationalTests : IAsyncLifetime
             AlternateKey = OrderStatus.Paid,
             IndexedStatus = OrderStatus.Shipped,
         });
-        await ctx.SaveChangesAsync();
+        await ctx.SaveChangesAsync(ct);
 
         ctx.ChangeTracker.Clear();
 
-        var loaded = await ctx.RelationalOrders.FindAsync(OrderStatus.Pending);
+        var loaded = await ctx.RelationalOrders.FindAsync([OrderStatus.Pending], ct);
         loaded.Should().NotBeNull();
         loaded!.Id.Should().Be(OrderStatus.Pending);
     }
@@ -59,8 +60,9 @@ public class RelationalTests : IAsyncLifetime
     [Fact]
     public async Task AlternateKey_AsEnum_WorksCorrectly()
     {
+        var ct = TestContext.Current.CancellationToken;
         await using var ctx = CreateContext();
-        await ctx.Database.EnsureCreatedAsync();
+        await ctx.Database.EnsureCreatedAsync(ct);
 
         ctx.RelationalOrders.Add(new RelationalOrder
         {
@@ -68,12 +70,12 @@ public class RelationalTests : IAsyncLifetime
             AlternateKey = OrderStatus.Paid,
             IndexedStatus = OrderStatus.Shipped,
         });
-        await ctx.SaveChangesAsync();
+        await ctx.SaveChangesAsync(ct);
 
         ctx.ChangeTracker.Clear();
 
         var loaded = await ctx.RelationalOrders
-            .FirstOrDefaultAsync(x => x.AlternateKey == OrderStatus.Paid);
+            .FirstOrDefaultAsync(x => x.AlternateKey == OrderStatus.Paid, ct);
         loaded.Should().NotBeNull();
         loaded!.AlternateKey.Should().Be(OrderStatus.Paid);
     }
@@ -81,8 +83,9 @@ public class RelationalTests : IAsyncLifetime
     [Fact]
     public async Task Index_AsEnum_WorksCorrectly()
     {
+        var ct = TestContext.Current.CancellationToken;
         await using var ctx = CreateContext();
-        await ctx.Database.EnsureCreatedAsync();
+        await ctx.Database.EnsureCreatedAsync(ct);
 
         ctx.RelationalOrders.Add(new RelationalOrder
         {
@@ -90,23 +93,24 @@ public class RelationalTests : IAsyncLifetime
             AlternateKey = OrderStatus.Paid,
             IndexedStatus = OrderStatus.Shipped,
         });
-        await ctx.SaveChangesAsync();
+        await ctx.SaveChangesAsync(ct);
 
         ctx.ChangeTracker.Clear();
 
         var loaded = await ctx.RelationalOrders
             .Where(x => x.IndexedStatus == OrderStatus.Shipped)
-            .ToListAsync();
+            .ToListAsync(ct);
         loaded.Should().HaveCount(1);
     }
 
     [Fact]
     public async Task Schema_IsCreated_WithoutErrors()
     {
+        var ct = TestContext.Current.CancellationToken;
         await using var ctx = CreateContext();
 
         // EnsureCreated should succeed — enum columns get proper column types
-        var created = await ctx.Database.EnsureCreatedAsync();
+        var created = await ctx.Database.EnsureCreatedAsync(ct);
         created.Should().BeTrue();
     }
 }
