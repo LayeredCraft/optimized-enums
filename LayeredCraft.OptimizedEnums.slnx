@@ -29,9 +29,6 @@
     <File Path="docs\getting-started\installation.md" />
     <File Path="docs\getting-started\quick-start.md" />
   </Folder>
-  <Folder Name="/docs/specs/">
-    <File Path="docs\specs\efcore-package-spec.md" />
-  </Folder>
   <Folder Name="/docs/usage/">
     <File Path="docs\usage\defining-enums.md" />
     <File Path="docs\usage\ef-core.md" />
