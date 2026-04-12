@@ -12,12 +12,6 @@ Install the EFCore package. The core `LayeredCraft.OptimizedEnums` package is pu
     dotnet add package LayeredCraft.OptimizedEnums.EFCore
     ```
 
-=== "Package Manager"
-
-    ```powershell
-    Install-Package LayeredCraft.OptimizedEnums.EFCore
-    ```
-
 === "PackageReference"
 
     ```xml
@@ -129,12 +123,24 @@ Three ways to register conversion, in order of increasing specificity:
 
 ### 1. Global Convention (recommended)
 
-Applies the enum attribute's default storage mode to all properties of each opted-in enum type across the entire model. One call covers all entities:
+Applies the enum attribute's default storage mode to all properties of each opted-in enum type across the entire model. One call covers all entities.
+
+Override `ConfigureConventions` in your `DbContext`:
 
 ```csharp
-protected override void ConfigureConventions(ModelConfigurationBuilder builder)
+using LayeredCraft.OptimizedEnums.EFCore;
+using Microsoft.EntityFrameworkCore;
+
+public class AppDbContext : DbContext
 {
-    builder.ConfigureOptimizedEnums();
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    public DbSet<Order> Orders { get; set; }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder builder)
+    {
+        builder.ConfigureOptimizedEnums();  // registers all [OptimizedEnumEfCore] types
+    }
 }
 ```
 
