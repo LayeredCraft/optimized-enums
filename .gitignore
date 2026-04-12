@@ -438,3 +438,6 @@ Thumbs.db
 **/*.DotSettings.user
 /.claude/do_not_commit/
 /nupkg/
+
+# Internal specs — not tracked in source control
+docs/specs/

@@ -1,0 +1,17 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: Program.cs: (5,0)-(9,1),
+      Message: [OptimizedEnumEfCore] cannot be applied to abstract class 'OrderStatusBase'. Apply the attribute to concrete sealed partial derived classes.,
+      Severity: Error,
+      Descriptor: {
+        Id: OE3004,
+        Title: Unsupported EF Core target usage,
+        MessageFormat: {0},
+        Category: OptimizedEnums.EFCore,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}
