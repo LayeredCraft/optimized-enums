@@ -120,8 +120,9 @@ internal static class EfCoreEmitter
 
     private static string BuildFullyQualifiedTypeName(EfCoreInfo info, string typeName)
     {
-        // The generated converter/comparer/extension classes live in the enum's namespace.
+        // Generated converter/extension classes are always emitted at namespace scope.
         // e.g. global::MyApp.Domain.OrderStatusValueConverter
+        // e.g. global::MyApp.Domain.Outer_StatusValueConverter  (nested enum — still namespace-scoped)
         if (info.Namespace is null)
             return $"global::{typeName}";
         return $"global::{info.Namespace}.{typeName}";

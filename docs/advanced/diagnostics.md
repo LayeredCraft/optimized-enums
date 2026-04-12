@@ -167,11 +167,10 @@ public sealed partial class OrderStatus : OptimizedEnum<OrderStatus, int> { ... 
 
 ### OE3004 — Unsupported Target
 
-**Message:** `[OptimizedEnumEfCore] cannot be applied to abstract class '{0}'; apply it to a concrete sealed partial derived class`
+**Cause:** `[OptimizedEnumEfCore]` was applied to a class configuration that the generator does not support. Two confirmed triggers:
 
-**Cause:** `[OptimizedEnumEfCore]` was applied to an abstract class. Abstract classes cannot serve as the target for converter generation because they cannot be instantiated.
+**Abstract class:**
 
-**Fix:** Apply the attribute only to concrete (`sealed`) derived classes:
 ```csharp
 // Wrong — abstract base class
 [OptimizedEnumEfCore]
@@ -181,6 +180,21 @@ public abstract partial class OrderStatusBase : OptimizedEnum<OrderStatusBase, i
 [OptimizedEnumEfCore]
 public sealed partial class OrderStatus : OrderStatusBase<OrderStatus> { ... }
 ```
+
+**Enum nested inside a generic containing type:**
+
+```csharp
+// Wrong — containing type has type parameters
+public class Container<T>
+{
+    [OptimizedEnumEfCore]
+    public sealed partial class Status : OptimizedEnum<Status, int> { ... }
+}
+```
+
+EF Core converters and extension methods are emitted at namespace scope. Generic type parameters from the containing type would not be in scope there, producing uncompilable references. Move the enum out of the generic container, or remove `[OptimizedEnumEfCore]` and register the conversion manually.
+
+Enums nested inside **non-generic** containing types are fully supported.
 
 ### OE9003 — Internal Generator Error
 

@@ -15,6 +15,7 @@ internal sealed record EfCoreInfo(
     string ValueTypeFullyQualified,
     bool ValueTypeIsReferenceType,
     EquatableArray<string> ContainingTypeSimpleNames,
+    EquatableArray<string> ContainingTypeDeclarations,
     EfCoreStorage Storage,
     EquatableArray<DiagnosticInfo> Diagnostics,
     LocationInfo? Location
@@ -30,10 +31,12 @@ internal sealed record EfCoreInfo(
         && ValueTypeFullyQualified == other.ValueTypeFullyQualified
         && ValueTypeIsReferenceType == other.ValueTypeIsReferenceType
         && ContainingTypeSimpleNames == other.ContainingTypeSimpleNames
+        && ContainingTypeDeclarations == other.ContainingTypeDeclarations
         && Storage == other.Storage
         && Diagnostics == other.Diagnostics;
 
     public override int GetHashCode() =>
-        HashCode.Combine(Namespace, ClassName, FullyQualifiedClassName, ValueTypeFullyQualified,
-            ValueTypeIsReferenceType, ContainingTypeSimpleNames, Storage, Diagnostics);
+        HashCode.Combine(
+            HashCode.Combine(Namespace, ClassName, FullyQualifiedClassName, ValueTypeFullyQualified),
+            HashCode.Combine(ValueTypeIsReferenceType, ContainingTypeSimpleNames, ContainingTypeDeclarations, Storage, Diagnostics));
 }

@@ -375,6 +375,8 @@ public partial class Outer
 
 The generated converter and extension class names include the containing type name with a `_` separator to avoid collisions (e.g., `Outer_StatusValueConverter`, `MyApp_Domain_Outer_StatusEfCoreExtensions`).
 
+**Limitation:** Enums nested inside **generic** containing types are not supported and produce OE3004. Converters and extension methods are emitted at namespace scope; generic type parameters from the containing type would not be in scope there. Move the enum out of the generic container, or register the conversion manually.
+
 ## Extension Class Naming
 
 The generated extension class is named by joining all namespace segments and containing-type names with underscores, suffixed with `EfCoreExtensions`:

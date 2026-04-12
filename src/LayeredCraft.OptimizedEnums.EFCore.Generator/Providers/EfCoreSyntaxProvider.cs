@@ -49,6 +49,31 @@ internal static class EfCoreSyntaxProvider
                 ValueTypeFullyQualified: string.Empty,
                 ValueTypeIsReferenceType: false,
                 ContainingTypeSimpleNames: EquatableArray<string>.Empty,
+                ContainingTypeDeclarations: EquatableArray<string>.Empty,
+                Storage: EfCoreStorage.ByValue,
+                Diagnostics: diagnostics.ToEquatableArray(),
+                Location: location);
+        }
+
+        // OE3004: enums nested inside generic containing types cannot have converters generated.
+        // Converters and extension methods are emitted at namespace scope; generic type parameters
+        // from the containing type would not be in scope there, producing uncompilable references.
+        var genericContainer = FindGenericContainingType(classSymbol);
+        if (genericContainer is not null)
+        {
+            diagnostics.Add(new DiagnosticInfo(
+                DiagnosticDescriptors.UnsupportedTarget,
+                location,
+                $"[OptimizedEnumEfCore] cannot be applied to '{className}' because its containing type '{genericContainer.Name}' is generic. EF Core converter generation for enums nested inside generic types is not supported in v1."));
+
+            return new EfCoreInfo(
+                Namespace: null,
+                ClassName: className,
+                FullyQualifiedClassName: classSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                ValueTypeFullyQualified: string.Empty,
+                ValueTypeIsReferenceType: false,
+                ContainingTypeSimpleNames: EquatableArray<string>.Empty,
+                ContainingTypeDeclarations: EquatableArray<string>.Empty,
                 Storage: EfCoreStorage.ByValue,
                 Diagnostics: diagnostics.ToEquatableArray(),
                 Location: location);
@@ -70,6 +95,7 @@ internal static class EfCoreSyntaxProvider
                 ValueTypeFullyQualified: string.Empty,
                 ValueTypeIsReferenceType: false,
                 ContainingTypeSimpleNames: EquatableArray<string>.Empty,
+                ContainingTypeDeclarations: EquatableArray<string>.Empty,
                 Storage: EfCoreStorage.ByValue,
                 Diagnostics: diagnostics.ToEquatableArray(),
                 Location: location);
@@ -90,6 +116,7 @@ internal static class EfCoreSyntaxProvider
                 ValueTypeFullyQualified: string.Empty,
                 ValueTypeIsReferenceType: false,
                 ContainingTypeSimpleNames: EquatableArray<string>.Empty,
+                ContainingTypeDeclarations: EquatableArray<string>.Empty,
                 Storage: EfCoreStorage.ByValue,
                 Diagnostics: diagnostics.ToEquatableArray(),
                 Location: location);
@@ -114,6 +141,7 @@ internal static class EfCoreSyntaxProvider
                     ValueTypeFullyQualified: string.Empty,
                     ValueTypeIsReferenceType: false,
                     ContainingTypeSimpleNames: EquatableArray<string>.Empty,
+                    ContainingTypeDeclarations: EquatableArray<string>.Empty,
                     Storage: EfCoreStorage.ByValue,
                     Diagnostics: diagnostics.ToEquatableArray(),
                     Location: location);
@@ -131,6 +159,7 @@ internal static class EfCoreSyntaxProvider
             ValueTypeFullyQualified: valueTypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
             ValueTypeIsReferenceType: valueTypeSymbol.IsReferenceType,
             ContainingTypeSimpleNames: GetContainingTypeSimpleNames(classSymbol),
+            ContainingTypeDeclarations: GetContainingTypeDeclarations(classSymbol),
             Storage: storage,
             Diagnostics: diagnostics.ToEquatableArray(),
             Location: location);
@@ -155,6 +184,18 @@ internal static class EfCoreSyntaxProvider
         return null;
     }
 
+    private static INamedTypeSymbol? FindGenericContainingType(INamedTypeSymbol symbol)
+    {
+        var current = symbol.ContainingType;
+        while (current is not null)
+        {
+            if (current.TypeParameters.Length > 0)
+                return current;
+            current = current.ContainingType;
+        }
+        return null;
+    }
+
     private static EquatableArray<string> GetContainingTypeSimpleNames(INamedTypeSymbol symbol)
     {
         var result = new List<string>();
@@ -162,6 +203,29 @@ internal static class EfCoreSyntaxProvider
         while (current is not null)
         {
             result.Add(current.Name);
+            current = current.ContainingType;
+        }
+        result.Reverse();
+        return result.ToEquatableArray();
+    }
+
+    private static EquatableArray<string> GetContainingTypeDeclarations(INamedTypeSymbol symbol)
+    {
+        var result = new List<string>();
+        var current = symbol.ContainingType;
+        while (current is not null)
+        {
+            var keyword = (current.IsRecord, current.TypeKind) switch
+            {
+                (true, TypeKind.Struct) => "record struct",
+                (true, _) => "record",
+                (_, TypeKind.Struct) => "struct",
+                (_, TypeKind.Interface) => "interface",
+                _ => "class"
+            };
+            var staticModifier = current.IsStatic ? "static " : "";
+            var nameWithTypeParams = current.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+            result.Add($"partial {staticModifier}{keyword} {nameWithTypeParams}");
             current = current.ContainingType;
         }
         result.Reverse();
