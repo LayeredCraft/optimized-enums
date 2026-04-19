@@ -4,7 +4,7 @@
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
     <RootNamespace>LayeredCraft.OptimizedEnums.EFCore.Tests</RootNamespace>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;net10.0;net11.0</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
     <LangVersion>default</LangVersion>
@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="AwesomeAssertions" />
+    <PackageReference Include="Basic.Reference.Assemblies.Net110" />
     <PackageReference Include="Basic.Reference.Assemblies.Net80" />
     <PackageReference Include="Basic.Reference.Assemblies.Net90" />
     <PackageReference Include="Basic.Reference.Assemblies.Net100" />
