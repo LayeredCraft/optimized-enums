@@ -13,14 +13,14 @@
     <PackageVersion Include="Basic.Reference.Assemblies.Net90" Version="1.8.5" />
     <PackageVersion Include="Basic.Reference.Assemblies.Net100" Version="1.8.5" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
-    <PackageVersion Include="Meziantou.Polyfill" Version="1.0.110" />
+    <PackageVersion Include="Meziantou.Polyfill" Version="1.0.116" />
     <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis" Version="5.0.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="5.3.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="[5.0.0]" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="[5.0.0]" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.202" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.203" />
     <PackageVersion Include="Scriban" Version="7.1.0" />
     <PackageVersion Include="Verify.SourceGenerators" Version="2.5.0" />
     <PackageVersion Include="Verify.XunitV3" Version="31.16.1" />
