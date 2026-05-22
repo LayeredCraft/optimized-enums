@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scriban" IncludeAssets="Build" />
+    <PackageReference Include="Scriban" IncludeAssets="Build" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- Embed Scriban templates as resources -->
@@ -41,11 +41,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
-    <!-- Public dependency: consumers need System.Text.Json for the generated code to compile -->
-    <PackageReference Include="System.Text.Json" />
+    <!-- Public dependency: consumers need System.Text.Json for the generated code to compile.
+         VersionOverride pins to 9.0.16 so net9.0 consumers don't inherit 10.0.8 from the netstandard2.0 CPM pin. -->
+    <PackageReference Include="System.Text.Json" VersionOverride="9.0.16" />
   </ItemGroup>
 
   <ItemGroup>
