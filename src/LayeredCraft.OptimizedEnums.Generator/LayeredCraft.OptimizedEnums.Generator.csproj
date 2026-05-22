@@ -29,7 +29,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CSharp" PrivateAssets="all" GeneratePathProperty="true" />
@@ -38,7 +37,7 @@
       Pack="true"
       PackagePath="analyzers/dotnet/cs"
       Visible="false" />
-    <PackageReference Include="Scriban" IncludeAssets="Build" />
+    <PackageReference Include="Scriban" IncludeAssets="Build" PrivateAssets="all" />
   </ItemGroup>
 
   <!-- Embed Scriban templates as resources -->
