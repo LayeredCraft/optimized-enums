@@ -28,30 +28,37 @@
     <!-- EFCore package -->
     <PackageVersion Include="Testcontainers.PostgreSql" Version="4.12.0" />
   </ItemGroup>
+  <!-- Microsoft/System.Text.Json/EF Core packages ship parallel stable and preview build lines.
+       Pin each per-TargetFramework with bounded ranges so Dependabot can raise
+       lower bounds without crossing into the next major/preview line. -->
   <ItemGroup Label="STJ pinned for netstandard" Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netstandard2.1'">
-    <PackageVersion Include="System.Text.Json" Version="10.0.9" />
+    <PackageVersion Include="System.Text.Json" Version="[10.0.9, 11.0.0)" />
   </ItemGroup>
   <ItemGroup Label="Microsoft (TFM pinned)" Condition="'$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netstandard2.1'">
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.26" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.26" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="[8.0.26, 9.0.0)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="[8.0.26, 9.0.0)" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="[8.0.11, 9.0.0)" />
   </ItemGroup>
   <ItemGroup Label="Microsoft (TFM pinned)" Condition="'$(TargetFramework)' == 'net9.0'">
-    <PackageVersion Include="System.Text.Json" Version="9.0.17" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.17" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.17" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageVersion Include="System.Text.Json" Version="[9.0.17, 10.0.0)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="[9.0.17, 10.0.0)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="[9.0.17, 10.0.0)" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="[9.0.4, 10.0.0)" />
   </ItemGroup>
   <ItemGroup Label="Microsoft (TFM pinned)" Condition="'$(TargetFramework)' == 'net10.0'">
-    <PackageVersion Include="System.Text.Json" Version="10.0.9" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.9" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.2" />
+    <PackageVersion Include="System.Text.Json" Version="[10.0.9, 11.0.0)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="[10.0.9, 11.0.0)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="[10.0.9, 11.0.0)" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="[10.0.2, 11.0.0)" />
   </ItemGroup>
+  <!-- Lower bounds here are prereleases, which causes NuGet to consider
+       prerelease candidates for these package IDs. Use a letter-led prerelease
+       marker on the exclusive upper bound so the ranges stay below all 12.0.0
+       previews as well as 12.0.0 stable. -->
   <ItemGroup Label="Microsoft (TFM pinned)" Condition="'$(TargetFramework)' == 'net11.0'">
-    <PackageVersion Include="System.Text.Json" Version="11.0.0-preview.5.26302.115" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="11.0.0-preview.5.26302.115" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="11.0.0-preview.5.26302.115" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="11.0.0-preview.5" />
+    <PackageVersion Include="System.Text.Json" Version="[11.0.0-preview.5.26302.115, 12.0.0-a)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="[11.0.0-preview.5.26302.115, 12.0.0-a)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="[11.0.0-preview.5.26302.115, 12.0.0-a)" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="[11.0.0-preview.5, 12.0.0-a)" />
   </ItemGroup>
 </Project>
