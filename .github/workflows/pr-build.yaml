@@ -13,7 +13,7 @@ permissions: write-all
 jobs:
   build:
     if: github.event.pull_request.draft == false
-    uses: LayeredCraft/devops-templates/.github/workflows/pr-build.yaml@v10.5
+    uses: LayeredCraft/devops-templates/.github/workflows/pr-build.yaml@v10.6
     with:
       solution: LayeredCraft.OptimizedEnums.slnx
       hasTests: true
