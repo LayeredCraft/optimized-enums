@@ -8,12 +8,12 @@
     <PackageVersion Include="AutoFixture" Version="4.18.1" />
     <PackageVersion Include="AutoFixture.Xunit3" Version="4.19.0" />
     <PackageVersion Include="AwesomeAssertions" Version="9.6.0" />
-    <PackageVersion Include="Basic.Reference.Assemblies.Net110" Version="1.8.13" />
-    <PackageVersion Include="Basic.Reference.Assemblies.Net80" Version="1.8.13" />
-    <PackageVersion Include="Basic.Reference.Assemblies.Net90" Version="1.8.13" />
-    <PackageVersion Include="Basic.Reference.Assemblies.Net100" Version="1.8.13" />
+    <PackageVersion Include="Basic.Reference.Assemblies.Net110" Version="1.8.14" />
+    <PackageVersion Include="Basic.Reference.Assemblies.Net80" Version="1.8.14" />
+    <PackageVersion Include="Basic.Reference.Assemblies.Net90" Version="1.8.14" />
+    <PackageVersion Include="Basic.Reference.Assemblies.Net100" Version="1.8.14" />
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
-    <PackageVersion Include="Meziantou.Polyfill" Version="1.0.169" />
+    <PackageVersion Include="Meziantou.Polyfill" Version="1.0.170" />
     <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis" Version="5.0.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0" />
